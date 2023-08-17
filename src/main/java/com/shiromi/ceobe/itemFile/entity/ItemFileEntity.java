@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
+
 @Entity
 @Table(name = "item_file_table")
 public class ItemFileEntity extends BaseEntity {
@@ -26,15 +27,20 @@ public class ItemFileEntity extends BaseEntity {
     @JoinColumn(name = "item_id")
     private ItemEntity itemEntity;
 
+
     @Builder
     public ItemFileEntity(Long id, String originalFileNameItem, String storedFileNameItem, ItemEntity itemEntity) {
         this.id = id;
         this.originalFileNameItem = originalFileNameItem;
         this.storedFileNameItem = storedFileNameItem;
         this.itemEntity = itemEntity;
+
     }
 
 
+    public ItemFileEntity() {
+
+    }
 }
 
 

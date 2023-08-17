@@ -1,3 +1,4 @@
+
 package com.shiromi.ceobe.common.entity;
 
 import lombok.Getter;
