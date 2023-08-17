@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class OrderDTO extends BaseEntity {
     private Long id;
     private int orderCount;
