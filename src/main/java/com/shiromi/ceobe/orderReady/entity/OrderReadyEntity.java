@@ -1,5 +1,6 @@
 package com.shiromi.ceobe.orderReady.entity;
 
+import com.shiromi.ceobe.common.entity.BaseEntity;
 import com.shiromi.ceobe.member.entity.MemberEntity;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +11,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Table(name="order_ready")
-public class OrderReadyEntity {
+public class OrderReadyEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
