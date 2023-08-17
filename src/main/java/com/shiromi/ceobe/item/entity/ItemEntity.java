@@ -1,16 +1,19 @@
 package com.shiromi.ceobe.item.entity;
 
+import com.shiromi.ceobe.common.entity.BaseEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "item_table")
-public class ItemEntity {
+public class ItemEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "item_id")
     private Long id;
 
     @Column(length = 100, nullable = false)
@@ -24,6 +27,7 @@ public class ItemEntity {
 
     @Column
     private int itemCount = 0;
+
 
     @Column
     private int fileAttachedItem;
@@ -41,11 +45,15 @@ public class ItemEntity {
         this.itemPrice = itemPrice;
         this.itemContents = itemContents;
         this.itemCount = itemCount;
+
         this.fileAttachedItem = fileAttachedItem;
         this.itemCategory = itemCategory;
         this.itemSellCount = itemSellCount;
     }
 
+    public ItemEntity() {
+
+    }
 
 
     //save
