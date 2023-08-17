@@ -1,6 +1,7 @@
 package com.shiromi.ceobe.item.entity;
 
 import com.shiromi.ceobe.common.entity.BaseEntity;
+import com.shiromi.ceobe.item.dto.ItemDTO;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -51,8 +52,17 @@ public class ItemEntity extends BaseEntity {
         this.itemSellCount = itemSellCount;
     }
 
-    public ItemEntity() {
-
+    public ItemDTO toItemDTO() {
+        return ItemDTO.builder()
+                .id(id)
+                .itemName(itemName)
+                .itemPrice(itemPrice)
+                .itemContents(itemContents)
+                .itemCount(itemCount)
+                .fileAttachedItem(fileAttachedItem)
+                .itemCategory(itemCategory)
+                .itemSellCount(itemSellCount)
+                .build();
     }
 
 
