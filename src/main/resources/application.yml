@@ -1,0 +1,36 @@
+# server port 번호 설정
+server:
+  port: 8989
+
+# 별도 yml 설정
+spring:
+  profiles:
+    include: private
+
+  # thymeleaf 캐시 설정
+  thymeleaf:
+    cache: false
+
+  # spring data jpa 설정
+  jpa:
+    database-platform: org.hibernate.dialect.MariaDB106Dialect
+    properties:
+      hibernate:
+        hibernate:
+        "[format_sql]": true
+        "[user_sql_comments]": true
+        "[highlight_sql]": true
+        "[hbm2ddl.auto]": update
+    open-in-view: false
+    show-sql: true
+
+# db query log 관련 설정
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: trace
+        type:
+          descriptor:
+            sql:
+              BasicBinder: trace
