@@ -8,9 +8,9 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
+@Entity
 @Getter
 @Setter
-@Entity
 @Table(name = "item_file_table")
 public class ItemFileEntity extends BaseEntity {
     @Id
@@ -38,9 +38,12 @@ public class ItemFileEntity extends BaseEntity {
 
     }
 
-
-    public ItemFileEntity() {
-
+    public static ItemFileEntity toSaveItemFileEntity(ItemEntity entity, String originalFileNameItem, String storedFileNameItem){
+        ItemFileEntity itemFileEntity = new ItemFileEntity();
+        itemFileEntity.setOriginalFileNameItem(originalFileNameItem);
+        itemFileEntity.setStoredFileNameItem(storedFileNameItem);
+        itemFileEntity.setItemEntity(entity);
+        return itemFileEntity;
     }
 }
 
