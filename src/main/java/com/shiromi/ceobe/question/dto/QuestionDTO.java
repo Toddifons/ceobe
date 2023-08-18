@@ -29,4 +29,15 @@ public class QuestionDTO {
         questionDTO.setQuestionUpdatedTime(questionEntity.getUpdatedTime());
         return questionDTO;
     }
+    public static <U> U toQuestionDTO(QuestionEntity questionEntity) {
+        QuestionDTO questionDTO = new QuestionDTO();
+        questionDTO.setId(questionEntity.getQuestionId());
+        questionDTO.setQuestionName(questionEntity.getQuestionName());
+        questionDTO.setQuestionTitle(questionEntity.getQuestionTitle());
+        questionDTO.setQuestionContents(questionEntity.getQuestionContents());
+        questionDTO.setQuestionStatus(questionEntity.getQuestionStatus());
+        questionDTO.setQuestionCreatedTime(questionEntity.getCreatedTime());
+        questionDTO.setQuestionUpdatedTime(questionEntity.getUpdatedTime());
+        return (U) questionDTO;
+    }
 }
