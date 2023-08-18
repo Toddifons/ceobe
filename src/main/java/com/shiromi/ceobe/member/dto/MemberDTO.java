@@ -56,6 +56,7 @@ public class MemberDTO {
     public MemberEntity toEntity() {
         return MemberEntity.builder()
                 .id(id)
+                .userId(userId)
                 .memberPassword(memberPassword)
                 .memberEmail(memberEmail)
                 .memberName(memberName)

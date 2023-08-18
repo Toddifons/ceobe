@@ -13,10 +13,11 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@Table(name = "item_table")
+@Table(name = "cart_table")
 public class CartEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "cart_id")
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
