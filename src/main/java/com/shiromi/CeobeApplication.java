@@ -7,6 +7,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class CeobeApplication {
 
 	public static void main(String[] args) {
+
+
+
+
 		SpringApplication.run(CeobeApplication.class, args);
 	}
 
