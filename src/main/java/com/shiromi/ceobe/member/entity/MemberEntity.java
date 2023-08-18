@@ -5,7 +5,7 @@ import com.shiromi.common.entity.BaseEntity;
 import com.shiromi.ceobe.member.dto.MemberDTO;
 import com.shiromi.ceobe.order.entity.OrderEntity;
 import com.shiromi.ceobe.question.entity.QuestionEntity;
-import com.shiromi.ceobe.question.entity.ReplyEntity;
+import com.shiromi.ceobe.reply.entity.ReplyEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
