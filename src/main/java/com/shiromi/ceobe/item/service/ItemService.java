@@ -9,8 +9,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -18,6 +20,7 @@ public class ItemService {
     private final ItemRepository itemRepository;
     private final ItemFileRepository itemFileRepository;
 
+    //저장
     public Long save(ItemDTO itemDTO) throws IOException {
         if (itemDTO.getItemFile().get(0).isEmpty()) {
             System.out.println("파일 없음");
@@ -40,4 +43,14 @@ public class ItemService {
         }
     }
 
+    //이름으로 검색
+    @Transactional
+    public ItemDTO findById(Long id) {
+        Optional<ItemEntity> itemEntityOptional = itemRepository.findById(id);
+        if (itemEntityOptional.isPresent()) {
+            return ItemDTO.toItemDTO(itemEntityOptional.get());
+        } else {
+            return null;
+        }
+    }
 }
