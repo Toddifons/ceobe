@@ -19,10 +19,12 @@ public class OrderEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "order_id")
     private Long id;
 
     @Column(length = 100, nullable = false)
     private String orderName;
+
     @Column(length = 100, nullable = false)
     private String orderStatus;
 
