@@ -1,5 +1,6 @@
 package com.shiromi.ceobe.question.entity;
 
+import com.shiromi.ceobe.question.dto.QuestionDTO;
 import com.shiromi.common.entity.BaseEntity;
 import com.shiromi.ceobe.member.entity.MemberEntity;
 import lombok.Builder;
@@ -41,13 +42,14 @@ public class QuestionEntity extends BaseEntity {
 //    @OneToMany(mappedBy = "questionEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
 //    private List<ReplyEntity> replyEntityList = new ArrayList<>();
 
-    @Builder
-    public QuestionEntity(Long questionId, String questionName, String questionStatus, String questionTitle, String questionContents, LocalDateTime createdTime) {
-        this.questionId = questionId;
-        this.questionName = questionName;
-        this.questionStatus = questionStatus;
-        this.questionTitle = questionTitle;
-        this.questionContents = questionContents;
-        this.createdTime = createdTime;
+    public static QuestionEntity toSaveEntity(QuestionDTO questionDTO , MemberEntity memberEntity){
+        QuestionEntity questionEntity = new QuestionEntity();
+        questionEntity.setQuestionName(questionDTO.getQuestionName());
+        questionEntity.setQuestionTitle(questionDTO.getQuestionTitle());
+        questionEntity.setQuestionContents(questionDTO.getQuestionContents());
+        questionEntity.setQuestionStatus(questionDTO.getQuestionStatus());
+        questionEntity.setMemberEntity(memberEntity);
+        return questionEntity;
     }
+
 }
