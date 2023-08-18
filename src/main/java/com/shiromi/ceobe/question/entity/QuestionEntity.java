@@ -5,10 +5,12 @@ import com.shiromi.common.entity.BaseEntity;
 import com.shiromi.ceobe.member.entity.MemberEntity;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@Setter
 @Getter
 @Entity
 @Table(name = "question")
