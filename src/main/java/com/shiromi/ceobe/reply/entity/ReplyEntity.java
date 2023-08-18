@@ -4,9 +4,11 @@ import com.shiromi.ceobe.question.entity.QuestionEntity;
 import com.shiromi.common.entity.BaseEntity;
 import com.shiromi.ceobe.member.entity.MemberEntity;
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
+@Setter
 @Getter
 @Entity
 @Table(name = "question_answer")
