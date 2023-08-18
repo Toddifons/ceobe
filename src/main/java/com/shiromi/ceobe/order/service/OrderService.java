@@ -12,6 +12,7 @@ import com.shiromi.ceobe.order.repository.OrderRepository;
 import com.shiromi.ceobe.orderItem.repository.OrderItemRepository;
 import com.shiromi.ceobe.member.repository.MemberRepository;
 import com.shiromi.ceobe.orderItem.entity.OrderItemEntity;
+import com.shiromi.ceobe.orderReady.entity.OrderReadyEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
@@ -35,7 +36,9 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
     private final ItemRepository itemRepository;
-
+    private final CartRepository cartRepository;
+    private final CartItemRepository cartItemRepository;
+    private final OrderReadyRepository orderReadyRepository;
     //주문하기
     public void save(OrderDTO orderDTO) {
 
@@ -160,6 +163,27 @@ public class OrderService {
         OrderEntity orderEntity=orderRepository.findById(id).get();
         orderEntity.setOrderStatus(status);
         orderRepository.save(orderEntity);
+    }
+
+    public String checkOrder(String userId, JSONArray itemDTOList) throws JSONException {
+        MemberEntity memberEntity = memberRepository.findByUserId(userId).get();
+        if (orderReadyRepository.findByMemberEntity(memberEntity).isEmpty()) {
+            for (int i = 0; i < itemDTOList.length(); i++) {
+                OrderReadyEntity orderReadyEntity = new OrderReadyEntity();
+                orderReadyEntity.setMemberEntity(memberEntity);
+                orderReadyEntity.setOrderName(itemDTOList.getJSONObject(i).getString("itemName"));
+                orderReadyEntity.setOrderPrice(itemDTOList.getJSONObject(i).getInt("itemPrice"));
+                orderReadyEntity.setCartCount(itemDTOList.getJSONObject(i).getInt("cartCount"));
+                orderReadyEntity.setItemPriceTotal(itemDTOList.getJSONObject(i).getInt("itemPriceTotal"));
+                orderReadyEntity.setItemImage(itemDTOList.getJSONObject(i).getString("itemImage"));
+                orderReadyEntity.setCartItemId(itemDTOList.getJSONObject(i).getLong("cartItemId"));
+                orderReadyRepository.save(orderReadyEntity);
+            }
+        } else {
+            return "no";
+        }
+
+        return "ok";
     }
 
 
