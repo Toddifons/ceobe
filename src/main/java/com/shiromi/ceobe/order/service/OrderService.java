@@ -210,7 +210,7 @@ public class OrderService {
     public String cancel(Long memberId) {
         MemberEntity memberEntity = memberRepository.findById(memberId).get();
         String userId = memberEntity.getUserId();
-        log.info("삭제전 : {}",memberEntity);
+        log.info("before delete yet : {}",memberEntity);
         orderReadyRepository.deleteByMemberEntity(memberEntity);
         return userId;
     }
