@@ -1,5 +1,6 @@
 package com.shiromi.ceobe.order.controller;
 
+import com.shiromi.ceobe.cartItem.dto.CartItemDTO;
 import com.shiromi.ceobe.item.dto.ItemDTO;
 import com.shiromi.ceobe.member.dto.MemberDTO;
 import com.shiromi.ceobe.order.dto.OrderDTO;
@@ -34,7 +35,7 @@ public class OrderController {
         log.info("Before : orderDTO = {}, model = {} ",orderDTO, model);
         orderService.save(orderDTO);
         model.addAttribute("order", orderDTO);
-        log.info("after : orderDTO = {}, model = {} ",orderDTO, model;
+        log.info("after : orderDTO = {}, model = {} ",orderDTO, model);
         return "redirect:/";
     }
     @PostMapping("/order/save2")
@@ -57,5 +58,16 @@ public class OrderController {
         model.addAttribute("itemPriceTotal",itemPriceTotal);
 
         return "orderPages/orderSave2";
+    }
+
+    //장바구니에서 체크박스로 선택 주문하기
+    @PostMapping ("/order/cart2")
+    public @ResponseBody String saveFormCart2(@RequestParam("cartList")JSONArray itemDTOList, HttpSession session) throws JSONException {
+        Object member = session.getAttribute("member");
+        System.out.println("체크값만 넘기기 = " + itemDTOList);
+        member = (MemberDTO) member;
+        String userId = ((MemberDTO) member).getUserId();
+        String result = orderService.checkOrder(userId,itemDTOList);
+        return result;
     }
 }
