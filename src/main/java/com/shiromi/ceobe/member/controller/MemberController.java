@@ -1,7 +1,5 @@
 package com.shiromi.ceobe.member.controller;
 
-import com.shiromi.common.service.PasswordChangeMailServiceImpl;
-import com.shiromi.common.service.RegisterMailServiceImpl;
 import com.shiromi.ceobe.member.dto.MemberDTO;
 import com.shiromi.ceobe.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +17,9 @@ import javax.servlet.http.HttpSession;
 @RequestMapping("/member")
 public class MemberController {
     private final MemberService memberService;
+//    private final RegisterMail registerMail;
+//    private final RegisterPassword registerPassword;
+
 
     //회원가입 화면
     @GetMapping("/save")
@@ -57,6 +58,13 @@ public class MemberController {
         model.addAttribute("redirectURL", redirectURL);
         return "redirect:" + redirectURL;
     }
+
+//    //로그인 화면
+//    @GetMapping("/login")
+//    public String loginForm() {
+//        return "/memberPages/memberLogin";
+//    }
+
 
     //로그인 처리
     @PostMapping("/login")
@@ -145,6 +153,9 @@ public class MemberController {
         model.addAttribute("redirectURL", redirectURL);
         return "redirect:" + redirectURL;
     }
+
+
+
 
 
     //일반 로그아웃
