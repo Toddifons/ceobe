@@ -186,6 +186,21 @@ public class OrderService {
         return "ok";
     }
 
-
+    public List<CartItemDTO> findByOrderReady(String userId) {
+        MemberEntity memberEntity = memberRepository.findByUserId(userId).get();
+        List<OrderReadyEntity> orderReadyEntityList = orderReadyRepository.findByMemberEntity(memberEntity);
+        List<CartItemDTO> cartItemDTOList = new ArrayList<>();
+        for (OrderReadyEntity orderReadyEntity : orderReadyEntityList) {
+            CartItemDTO cartItemDTO = new CartItemDTO();
+            cartItemDTO.setItemName(orderReadyEntity.getOrderName());
+            cartItemDTO.setItemPrice(orderReadyEntity.getOrderPrice());
+            cartItemDTO.setCartCount(orderReadyEntity.getCartCount());
+            cartItemDTO.setItemPriceTotal(orderReadyEntity.getItemPriceTotal());
+            cartItemDTO.setItemImage(orderReadyEntity.getItemImage());
+            cartItemDTO.setId(orderReadyEntity.getCartItemId());
+            cartItemDTOList.add(cartItemDTO);
+        }
+        return cartItemDTOList;
+    }
 
 }
