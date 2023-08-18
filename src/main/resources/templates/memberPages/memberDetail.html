@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>🎈Find your Base:)-회원상세</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <!--  //시간설정-->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <!--  폰트-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jua&family=Nanum+Gothic&family=Noto+Sans+KR&display=swap"
+          rel="stylesheet">
+    <style>
+        *{
+            font-family: 'Jua', sans-serif;
+            font-family: 'Nanum Gothic', sans-serif;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+    </style>
+</head>
+<body style="background-color: white">
+<th:block th:replace="commonPages/header :: header"></th:block>
+<div class="container">
+    <table class="table table-striped text-center">
+        <tr>
+            <th>번호</th>
+            <td th:text="${member.id}"></td>
+        </tr>
+        <tr>
+            <th>아이디</th>
+            <td th:text="${member.userId}"></td>
+        </tr>
+        <tr>
+            <th>이메일</th>
+            <td th:text="${member.memberEmail}"></td>
+        </tr>
+        <tr>
+            <th>이름</th>
+            <td th:text="${member.memberName}"></td>
+        </tr>
+        <tr>
+            <th>전화번호</th>
+            <td th:text="${member.memberMobile}"></td>
+        </tr>
+        <tr>
+        <tr>
+            <th>가입일자</th>
+            <td th:text="*{#temporals.format(member.memberCreatedTime,'yyyy-MM-dd HH:mm:ss')}"></td>
+        </tr>
+        <tr>
+            <th>주소</th>
+            <td th:text="${member.memberAddress}"></td>
+        </tr>
+    </table>
+    <button type="button" class="btn btn-default" style="float:right ; display: inline; margin-top: 10px" onclick="memberList()">목록</button>
+    <!--    <a th:href="@{|/member/delete/${member.id}|}" class="btn btn-danger">삭제</a>-->
+</div>
+
+</body>
+<script th:inline="javascript">
+    const memberList = () => {
+        location.href="/member/list";
+    }
+
+</script>
+
+</html>

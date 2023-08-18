@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>🎈Find your Base:)-회원정보수정</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <!--ajax cdn-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <!--  폰트-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jua&family=Nanum+Gothic&family=Noto+Sans+KR&display=swap" rel="stylesheet">
+
+    <style>
+        *{
+            font-family: 'Jua', sans-serif;
+            font-family: 'Nanum Gothic', sans-serif;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        #update-form {
+            width: 400px;
+            height: 409px;
+            left: 411px;
+            top: 85px;
+            /*가운데 정렬 margin: auto*/
+            margin-top: 100px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        label{
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body style="background-color: white">
+<th:block th:replace="commonPages/header :: header"></th:block>
+<div class="container" id="update-form">
+    <form action="/member/update" method="post" name="updateCheck">
+        <input type="hidden" name="id" th:value="${session.member.id}">
+
+        <label>아이디</label>
+        <input type="text" name="userId" th:value="${session.member.userId}" class="form-control" readonly>
+        <div>
+            <label for="pwdUpdate">변경 비밀번호</label>
+            <input type="password" name="memberPassword" id="pwdUpdate" class="form-control" placeholder="비밀번호 입력 (문자, 숫자 포함 8~12자)">
+            <span id="pwdUpdateError"></span>
+        </div>
+        <div>
+            <label for="rePwdUpdate">변경 비밀번호 확인</label>
+            <input type="password" name="memberPassword2" id="rePwdUpdate" onblur="updateCheck_pwd()" class="form-control" placeholder="비밀번호 재입력">
+            <span id="reUpdatePwdError"></span>
+        </div>
+        <div>
+            <label for="memberName" >이름</label>
+            <input type="text" name="memberName" id="memberName" th:value="${session.member.memberName}" class="form-control">
+            <span id="nameUpdateError"></span>
+        </div>
+        <div>
+            <label for="memberMobile">전화번호</label>
+            <input type="text" name="memberMobile" id="memberMobile" th:value="${session.member.memberMobile}" onblur="updateCheck_mobile()" class="form-control">
+            <span id="mobileUpdateError"></span>
+        </div>
+        <div>
+            <label for="memberEmail">이메일</label>
+            <input type="text" name="memberEmail" id="memberEmail" th:value="${session.member.memberEmail}" class="form-control" readonly>
+            <span id="emailUpdateError"></span>
+        </div>
+        <input type="button" id="updateBtn" class="btn btn-success" name="updateCheck" onclick="updateUs()" style="width: 385px; margin-top: 20px; text-align: center" value="정보수정">
+    </form>
+</div>
+
+</body>
+<script th:inline="javascript">
+    const updateUs = () => {
+        const pwdUpdate = document.getElementById('pwdUpdate').value;
+        const rePwdUpdate = document.getElementById('rePwdUpdate').value;
+        const memberName = document.getElementById('memberName').value;
+        const memberMobile = document.getElementById('memberMobile').value;
+        const memberEmail = document.getElementById('memberEmail').value;
+        const exp = /^(?=.*[a-z])(?=.*\d)[A-Za-z\d]{8,12}$/;
+
+
+        if (pwdUpdate === '') {
+            alert('비밀번호를 입력해주세요');
+            return false;
+        }
+        if (rePwdUpdate === '') {
+            alert('비밀번호를 확인해주세요');
+            return false;
+        }
+        if (rePwdUpdate !== pwdUpdate) {
+            alert('비밀번호가 일치하지 않습니다.');
+            return false;
+        }
+        if(!document.updateCheck.memberPassword.value.match(exp)) {
+            const passwordCheck = document.getElementById("pwdUpdateError");
+            passwordCheck.innerHTML = "영문 소문자와 숫자를 이용하여 8~12자 이내로 입력하세요";
+            passwordCheck.style.color = "red";
+            return false;
+        }
+        if (memberName === '') {
+            alert('이름을 입력해주세요');
+            return false;
+        }
+        if (memberMobile === '') {
+            alert('전화번호를 입력해주세요');
+            return false;
+        }
+        if (memberMobile.length !== 13) {
+            alert('전화번호를 정확히 입력해주세요');
+            return false;
+        }
+        document.updateCheck.submit();
+    }
+
+    const updateCheck_pwd = () => {
+        const pwdUpdate = document.getElementById('pwdUpdate').value;
+        const rePwdUpdate = document.getElementById('rePwdUpdate').value;
+        const exp = /^(?=.*[a-z])(?=.*\d)[A-Za-z\d]{8,12}$/;
+        if(!document.updateCheck.memberPassword.value.match(exp)){
+            $("#updateBtn").attr("disabled", "disabled");
+            const passwordCheck2 =document.getElementById("pwdUpdateError");
+            passwordCheck2.innerHTML="영문 소문자와 숫자를 이용하여 8~12자 이내로 입력하세요";
+            passwordCheck2.style.color="red";
+        } else if(pwdUpdate === rePwdUpdate) {
+            $("#updateBtn").removeAttr("disabled");
+            document.getElementById("pwdUpdateError").innerHTML = "비밀번호가 일치합니다.";
+            document.getElementById("pwdUpdateError").style.color = "blue";
+        }
+    }
+    const updateCheck_mobile = () => {
+        const mobile = document.getElementById("memberMobile").value;
+        const mobileCheck = document.getElementById("mobileUpdateError");
+        const regExp = /^\d{3}-\d{3,4}-\d{4}$/;
+        if (!regExp.test(mobile)) {
+            $("#updateBtn").attr("disabled", "disabled");
+            document.getElementById("memberMobile").value = "";
+            mobileCheck.innerHTML = "전화번호는 000-0000-0000 형식으로 입력해주세요."
+            mobileCheck.style.color = "red"
+        } else {
+            $("#updateBtn").removeAttr("disabled");
+            mobileCheck.innerHTML = ""
+        }
+    }
+    // const update = () => {
+    //  document.updateForm.submit();
+    // }
+
+</script>
+</html>
