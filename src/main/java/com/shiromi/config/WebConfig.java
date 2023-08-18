@@ -1,7 +1,7 @@
-package com.shiromi.ceobe.config;
+package com.shiromi.config;
 
 
-import com.shiromi.ceobe.common.interceptor.LoginCheckInterceptor;
+import com.shiromi.common.interceptor.LoginCheckInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;

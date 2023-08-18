@@ -1,5 +1,5 @@
 
-package com.shiromi.ceobe.common.entity;
+package com.shiromi.common.entity;
 
 import lombok.Getter;
 import org.hibernate.annotations.CreationTimestamp;

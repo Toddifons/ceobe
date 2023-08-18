@@ -1,4 +1,4 @@
-package com.shiromi.ceobe.common.service;
+package com.shiromi.common.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,8 +14,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Random;
 
 @Service
-public class RegisterMailServiceImpl implements MailService {
-
+public class PasswordChangeMailServiceImpl implements MailService {
     @Autowired
     JavaMailSender emailsender; // Bean 등록해둔 MailConfig 를 emailsender 라는 이름으로 autowired
 
@@ -25,6 +24,7 @@ public class RegisterMailServiceImpl implements MailService {
     private String username;
     public final String NAVER_EMAIL = "@naver.com" ;
 
+
     // 메일 내용 작성
     @Override
     public MimeMessage createMessage(String to) throws MessagingException, UnsupportedEncodingException {
@@ -32,27 +32,29 @@ public class RegisterMailServiceImpl implements MailService {
 //		System.out.println("인증 번호 : " + ePw);
 
 
-
-
         MimeMessage message = emailsender.createMimeMessage();
 
         message.addRecipients(Message.RecipientType.TO, to); // 받는 사람
-        message.setSubject("ZeroBaseMall 회원가입 이메일 인증");// 제목
+        message.setSubject("ZeroBaseMall 비밀번호 변경 이메일 인증");// 제목
 
         String msgg = "";
         msgg += "<div style='margin:100px;'>";
         msgg += "<h1> 안녕하세요</h1>";
-        msgg += "<h1> 여러분의 IT 라이프를 책임지는 ZeroBaseMall 입니다</h1>";
+        msgg += "<h1> 귀하께서 요청하신 임시 비밀번호</h1>";
         msgg += "<br>";
-        msgg += "<p>아래 코드를 회원가입 창으로 돌아가 입력해주세요<p>";
+        msgg += "<p>수신을 위해 발송된 메일입니다.<p>";
         msgg += "<br>";
-        msgg += "<p>항상 최상의 서비스를 제공하겠습니다. 감사합니다!<p>";
+        msgg += "<p>아래 코드를 로그인 창으로 돌아가 입력해주세요<p>";
+        msgg += "<br>";
+        msgg += "<p>로그인 후 새로운 비밀번호로 변경하시기 바랍니다.<p>";
+        msgg += "<br>";
+        msgg += "<p>감사합니다.<p>";
         msgg += "<br>";
         msgg += "<div align='center' style='border:1px solid black; font-family:verdana';>";
-        msgg += "<h3 style='color:blue;'>회원가입 인증 코드입니다.</h3>";
+        msgg += "<h3 style='color:blue;'>임시 비밀번호입니다.</h3>";
         msgg += "<div style='font-size:130%'>";
         msgg += "CODE : <strong>";
-        msgg += ePw + "</strong><div><br/> "; // 메일에 인증번호 넣기
+        msgg += ePw + "</strong><div><br/> "; // 임시 비밀번호
         msgg += "</div>";
         message.setText(msgg, "utf-8", "html");// 내용, charset 타입, subtype
         // 보내는 사람의 이메일 주소, 보내는 사람 이름

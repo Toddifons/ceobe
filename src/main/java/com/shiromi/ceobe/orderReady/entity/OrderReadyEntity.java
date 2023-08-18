@@ -1,6 +1,6 @@
 package com.shiromi.ceobe.orderReady.entity;
 
-import com.shiromi.ceobe.common.entity.BaseEntity;
+import com.shiromi.common.entity.BaseEntity;
 import com.shiromi.ceobe.member.entity.MemberEntity;
 import lombok.Getter;
 import lombok.Setter;
