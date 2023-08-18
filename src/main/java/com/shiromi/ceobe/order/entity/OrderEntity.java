@@ -19,7 +19,7 @@ public class OrderEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long orderId;
+    private Long id;
 
     @Column(length = 100, nullable = false)
     private String orderName;
@@ -39,8 +39,8 @@ public class OrderEntity extends BaseEntity {
 
 
     @Builder
-    public OrderEntity(Long orderId, String orderName, String orderStatus, String review, MemberEntity memberEntity) {
-        this.orderId = orderId;
+    public OrderEntity(Long id, String orderName, String orderStatus, String review, MemberEntity memberEntity) {
+        this.id = id;
         this.orderName = orderName;
         this.orderStatus = orderStatus;
         this.review = review;
