@@ -17,6 +17,7 @@ import javax.persistence.*;
 public class ItemFileEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "item_file_id")
     private Long id;
 
     @Column(length = 100, nullable = false)
