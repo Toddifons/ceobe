@@ -11,7 +11,8 @@ import javax.persistence.*;
 public class OrderItemEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long orderItemId;
+    @Column(name = "order_item_id")
+    private Long id;
 
     @Column(length = 100, nullable = false)
     private String orderName;
