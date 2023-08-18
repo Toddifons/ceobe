@@ -4,11 +4,15 @@ import com.shiromi.ceobe.common.entity.BaseEntity;
 import com.shiromi.ceobe.member.entity.MemberEntity;
 import com.shiromi.ceobe.orderItem.entity.OrderItemEntity;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "order")
 public class OrderEntity extends BaseEntity {
