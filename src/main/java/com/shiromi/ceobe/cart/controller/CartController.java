@@ -5,7 +5,10 @@ import com.shiromi.ceobe.cart.service.CartService;
 import com.shiromi.ceobe.cartItem.dto.CartItemDTO;
 import com.shiromi.ceobe.item.dto.*;
 import com.shiromi.ceobe.member.dto.MemberDTO;
+import com.shiromi.ceobe.member.entity.MemberEntity;
+import com.shiromi.config.auth.PrincipalDetails;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,22 +29,23 @@ public class CartController {
 
     private final CartService cartService;
 
-    //장바구니 저장
-//    @GetMapping("/save")
-//    public String saveForm(@ModelAttribute ItemDTO itemDTO, Model model) {
-//        String userId = itemDTO.getUserId();
-//        cartService.save(itemDTO);
-//        model.addAttribute("item", itemDTO);
-//        return "redirect:/cart/list?userId=" + userId;
+    //== 기존 코드 ==//
+//    @GetMapping("/saved")
+//    public @ResponseBody String cartSave(@ModelAttribute ItemDTO itemDTO , HttpSession session){
+//        Object member = session.getAttribute("member");
+//        member = (MemberDTO) member;
+//        String userId = ((MemberDTO) member).getUserId();
+//        itemDTO.setUserId(userId);
+//        System.out.println("장바구니저장itemDTO = " + itemDTO);
+//        //cartService.save(itemDTO);
+//        return userId;
 //    }
+
+    //== 장바구니 저장 ==//
+    //== 리팩토링 예시, 아래와 같이 간단하게 ==//
     @GetMapping("/saved")
-    public @ResponseBody String cartSave(@ModelAttribute ItemDTO itemDTO , HttpSession session){
-        Object member = session.getAttribute("member");
-        member = (MemberDTO) member;
-        String userId = ((MemberDTO) member).getUserId();
-        itemDTO.setUserId(userId);
-        System.out.println("장바구니저장itemDTO = " + itemDTO);
-        cartService.save(itemDTO);
+    public @ResponseBody String cartSave(@ModelAttribute ItemDTO itemDTO , @AuthenticationPrincipal PrincipalDetails principalDetails){
+        String userId = cartService.save(itemDTO, principalDetails.getMemberEntity());
         return userId;
     }
 
