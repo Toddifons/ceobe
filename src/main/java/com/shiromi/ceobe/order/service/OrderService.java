@@ -13,6 +13,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -118,6 +121,15 @@ public class OrderService {
             orderDTO.setOrderName(orderEntity.getOrderName());
             orderDTOList.add(orderDTO);
         }
+        return orderDTOList;
+    }
+
+    @Transactional
+    public Page<OrderDTO> findListAll(Pageable pageable, String sort) {
+        int page = pageable.getPageNumber() - 1;
+        int pageLimit = pageable.getPageSize();
+        Page<OrderEntity> orderEntityList = orderRepository.findAll(PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, sort)));
+        Page<OrderDTO> orderDTOList = orderEntityList.map(OrderDTO::toOrderDTO);
         return orderDTOList;
     }
 
