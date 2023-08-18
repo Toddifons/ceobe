@@ -19,8 +19,9 @@ public class ItemDTO {
     private int itemCount;
     private String itemCategory;
     private int fileAttachedItem;
-
+    private String userId;
     private int itemSellCount;
+    private int cartCount;
 
 
 
@@ -36,6 +37,7 @@ public class ItemDTO {
         this.fileAttachedItem = fileAttachedItem;
         this.itemSellCount = itemSellCount;
     }
+
 
 
 }

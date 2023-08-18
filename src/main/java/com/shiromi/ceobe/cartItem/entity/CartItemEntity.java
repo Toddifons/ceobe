@@ -10,6 +10,8 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "cart_item_table")
+@Setter
+@Getter
 public class CartItemEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
