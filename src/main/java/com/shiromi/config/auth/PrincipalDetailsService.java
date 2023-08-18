@@ -16,7 +16,7 @@ public class PrincipalDetailsService implements UserDetailsService {
     //login 동작을 할 때 실행됨.
     //view에서 파라미터로 넘어온 username을 토대로 User 찾아서 객체를 PrincipalDetails 객체에 저장하는 메소드
     @Override
-    public NMemberDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         User userEntity = userRepository.findByUsername(username);
 
