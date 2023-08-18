@@ -1,5 +1,8 @@
 package com.shiromi.ceobe.order.service;
 
+import com.shiromi.ceobe.cart.entity.CartEntity;
+import com.shiromi.ceobe.cartItem.dto.CartItemDTO;
+import com.shiromi.ceobe.cartItem.entity.CartItemEntity;
 import com.shiromi.ceobe.item.entity.ItemEntity;
 import com.shiromi.ceobe.item.repository.ItemRepository;
 import com.shiromi.ceobe.member.entity.MemberEntity;
@@ -111,7 +114,7 @@ public class OrderService {
     public List<OrderDTO> findAll(String userId) {
         MemberEntity memberEntity = memberRepository.findByUserId(userId).get();
         List<OrderEntity> orderEntityList = orderRepository.findByMemberEntity(memberEntity, Sort.by(Sort.Direction.DESC, "id"));
-        System.out.println("orderEntityList = " + orderEntityList);
+        log.info("orderEntityList = {} ",orderEntityList);
         List<OrderDTO> orderDTOList = new ArrayList<>();
         for (OrderEntity orderEntity : orderEntityList) {
             OrderDTO orderDTO = new OrderDTO();
@@ -123,7 +126,7 @@ public class OrderService {
         }
         return orderDTOList;
     }
-
+    //
     @Transactional
     public Page<OrderDTO> findListAll(Pageable pageable, String sort) {
         int page = pageable.getPageNumber() - 1;
@@ -132,5 +135,27 @@ public class OrderService {
         Page<OrderDTO> orderDTOList = orderEntityList.map(OrderDTO::toOrderDTO);
         return orderDTOList;
     }
+    //유저 아이디로 카트 찾기
+    @Transactional
+    public List<CartItemDTO> findCartById(String userId) {
+        MemberEntity memberEntity = memberRepository.findByUserId(userId).get();
+        CartEntity cartEntity = cartRepository.findByMemberEntity(memberEntity).get();
+        List<CartItemEntity> cartEntityList = cartItemRepository.findByCartEntity(cartEntity);
+        log.info("cartEntityList = {} ", cartEntityList);
+        List<CartItemDTO> cartItemDTOList = new ArrayList<>();
+        for (CartItemEntity cartItemEntity : cartEntityList) {
+            CartItemDTO cartItemDTO = new CartItemDTO();
+            cartItemDTO.setId(cartItemEntity.getId());
+            cartItemDTO.setItemName(cartItemEntity.getItemEntity().getItemName());
+            cartItemDTO.setItemPrice(cartItemEntity.getItemEntity().getItemPrice());
+            cartItemDTO.setItemCount(cartItemEntity.getItemEntity().getItemCount());
+            cartItemDTO.setCartCount(cartItemEntity.getCartCount());
+            cartItemDTO.setItemImage(cartItemEntity.getItemEntity().getItemFileEntityList().get(0).getStoredFileNameItem());
+            cartItemDTOList.add(cartItemDTO);
+        }
+        return cartItemDTOList;
+    }
+
+
 
 }
