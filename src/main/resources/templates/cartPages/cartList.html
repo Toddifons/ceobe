@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>🎈Find your Base:)-장바구니</title>
+    <link rel="stylesheet" th:href="@{/css/cart.css}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!--  폰트-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jua&family=Nanum+Gothic&family=Noto+Sans+KR&display=swap"
+          rel="stylesheet">
+</head>
+<body style="background-color: white">
+<th:block th:replace="commonPages/header :: header"></th:block>
+
+<div class="main">
+    <div th:unless="${cartList == null}" class="cart_table">
+        <p>장바구니🛒</p>
+
+        <ul class="cart_list">
+            <li>
+                <div class="checkbox">
+                    <input type="checkbox" name="all_chk" id="all_chk" checked th:onclick="checkAll([[${cartList}]])">
+                    <label for="all_chk">전체선택</label>
+                </div>
+                <!--            <div class="del_btn">삭제 (<span class="num">0</span>)</div>-->
+            </li>
+            <li th:each="cart:${cartList}">
+<!--                체크박스-->
+                <div class="checkbox">
+                    <input type="checkbox" th:id="${cart.id}" checked th:value="${cart.id}" name="item_chk"
+                           th:onclick="checkBox([[${cart} ]])">
+                    <label th:for="${cart.id}"></label>
+                </div>
+<!--                담은 상품-->
+                <div class="item_detail">
+                    <img th:src="@{|/upload/${cart.itemImage}}" alt="" width="50" height="50" style="width: 50px">
+                    <p class="name"><strong th:text="${cart.itemName}"></strong></p>
+                    <!--                <p class="txt">텍스트</p>-->
+                </div>
+<!--                선택한 옵션-->
+                <div class="opt_info">
+                    <strong class="price_unit" th:text="${#numbers.formatInteger(cart.itemPrice,0,'COMMA')}"></strong>원
+                    <!--                <strong class="price_unit" th:text="${cart.itemPrice}"></strong>원-->
+                    <input class="number" type="number" th:id="${cart.id}+'a'" min="1" max="100"
+                           th:value="${cart.cartCount}"
+                           name="orderCount" th:onchange="total([[${cart}]])">
+                    <div class="total_p">
+                        <input type="hidden" class="price_amount" th:id="${cart.id+'price_amount'}" name="price_amount"
+                               th:value="${cart.itemPrice}*${cart.cartCount}">
+                        <strong th:id="${cart.id+'price_amount2'}" th:value="${cart.itemPrice}*${cart.cartCount}"
+                                th:text="|${#numbers.formatInteger(cart.itemPrice*cart.cartCount,0,'COMMA')}|"></strong>원
+<!--                        담은 상품 삭제-->
+                        <span class="del_li_btn">
+                            <img
+                                    th:src="@{https://tictoc-web.s3.ap-northeast-2.amazonaws.com/web/img/icon/btn_del_circle.svg}"
+                                    th:onclick="deleteFn([[${cart}]])">
+                        </span>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <input type="hidden" id="cartList" th:value="${cartList.size()}">
+
+    <div class="cart_table">
+        <div class="cart_total_area">
+            <p>결제 정보</p>
+            <div class="cart_total_price">
+                <p>총 결제금액 <strong class="item_price_total" id="item_price_total"></strong>원 <span class="plus_ic"></span>
+                </p>
+            </div>
+        </div>
+
+        <div class="btn_box">
+            <button type="button" onclick="goBack()" class="btn wh-btn">계속 쇼핑하기</button>
+            <button type="button" onclick="orderFn()" class="btn black-btn">구매하기</button>
+        </div>
+
+    </div>
+</div>
+</body>
+
+<script th:inline="javascript">
+    //전체체크박스
+    const checkAll = (cartList) => {
+        const length = document.getElementById("cartList").value;
+        console.log("checkBox")
+        const allChk = document.getElementById('all_chk');
+        if (allChk.checked == true) {
+            for (let i = 0; i < length; i++) {
+                document.getElementById(cartList[i].id).checked = true;
+            }
+            checkPrice();
+        } else {
+            allChk.checked = false;
+            for (let i = 0; i < length; i++) {
+                document.getElementById(cartList[i].id).checked = false;
+            }
+            document.querySelector(".item_price_total").innerHTML = 0;
+            checkPrice();
+        }
+    }
+
+    //체크박스
+    const checkBox = (cart) => {
+        console.log("check박스 클릭")
+        const length = document.getElementById("cartList").value;
+        let checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+        const allChk = document.getElementById('all_chk');
+        if (checkboxes.length-1 == length) {
+            allChk.checked = true;
+        } else {
+            allChk.checked = false;
+        }
+        console.log("체크박스 이프문 실행완료")
+        checkPrice();
+    }
+
+
+    //계속 쇼핑하기
+    const goBack = () => {
+        location.href = "/item/main";
+    }
+
+    //주문하기
+    const orderFn = () => {
+
+        let itemPriceTotal2 = document.querySelector(".item_price_total").innerHTML;
+        let itemPriceTotal = itemPriceTotal2.replace(/,/g, '');
+        console.log("정규식확인" + itemPriceTotal)
+
+        const length = document.getElementById("cartList").value;
+        console.log("주문하기");
+        const cartList = [[${cartList}]];
+        if (itemPriceTotal == 0) {
+            alert("주문할 상품을 선택해주세요");
+            return;
+        }
+
+        if (cartList.length == 0) {
+            alert("장바구니에 담긴 상품이 없습니다😰");
+        } else {
+            const userId = [[${session.member.userId}]];
+            let cartIdList = [[${cartIdList}]];
+            let aJsonArray = new Array();
+            for (let i = 0; i < length ; i++) {
+                let b = document.getElementById(cartList[i].id)
+                console.log(b.checked)
+                if(b.checked == true){
+                    aJson = new Object();
+                    aJson.cartItemId = cartList[i].id;
+                    aJson.itemName = cartList[i].itemName;
+                    aJson.itemPrice = cartList[i].itemPrice;
+                    aJson.cartCount = document.getElementById(cartList[i].id + "a").value;
+                    aJson.itemImage = cartList[i].itemImage;
+                    aJson.itemPriceTotal = itemPriceTotal;
+                    aJsonArray.push(aJson);
+                }
+            }
+            console.log(aJsonArray);
+            $.ajax({
+                type: "post",
+                url: "/order/cart2",
+                data: {
+                    "cartList": JSON.stringify(aJsonArray)
+                },
+                dataType: "text",
+                success: function (result) {
+                    if (result == "ok"){
+                        location.href = "/order/cart3?userId="+userId;
+                    }else {
+                        alert("이전 주문내역이 존재합니다. 주문페이지로 이동합니다.");
+                        location.href = "/order/cart3?userId="+userId;
+                    }
+
+                },
+                error: function (err) {
+                    console.log("실패");
+                }
+            });
+            // location.href = "/order/cart?userId=" + userId + "&itemPriceTotal=" + itemPriceTotal;
+        }
+
+    }
+    //장바구니 삭제
+    const deleteFn = (find) => {
+        const length = document.getElementById("cartList").value;
+        console.log(length);
+        const id = find.id;
+        const itemPrice = find.itemPrice;
+        let itemPriceTotal = 0;
+        const cartList = [[${cartList}]];
+        for (let i = 0; i < length; i++) {
+            itemPriceTotal += cartList[i].itemPrice * cartList[i].cartCount;
+        }
+
+        $.ajax({
+            type: "get",
+            url: "/cart/delete",
+            data: {
+                cartId: id
+            },
+            dataType: "text",
+            success: function (cartResult) {
+                console.log(id)
+                console.log(cartResult);
+                document.querySelector(".item_price_total").innerHTML = itemPriceTotal - itemPrice;
+                document.getElementById("cartList").value = length - 1;
+                location.href= "/cart/list?userId="+[[${session.member.userId}]];
+            },
+            error: function () {
+                console.log("실패");
+
+            }
+        });
+    }
+    //계산
+    const checkPrice = () => {
+        console.log("총 상품금액");
+        const length = document.getElementById("cartList").value;
+        let checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+        const allChk = document.getElementById(
+            'all_chk');
+        console.log(checkboxes);
+        const cartList2 = [[${cartList}]];
+        let sum = 0;
+        for (let i = 0; i < length; i++) {
+            if (document.getElementById(cartList2[i].id).checked == true) {
+                sum += Number(document.getElementById(cartList2[i].id + 'price_amount').value);
+                //총 상품금액에 콤마찍기
+                const money = Number(sum).toLocaleString();
+                document.querySelector(".item_price_total").innerHTML = money;
+            }
+        }
+        if (checkboxes.length == 0 && allChk.checked == true) {
+            document.querySelector(".item_price_total").innerHTML = 0;
+            allChk.checked = false;
+        }else if(checkboxes.length == 0){
+            document.querySelector(".item_price_total").innerHTML = 0;
+        }
+    }
+
+
+    //총 상품금액
+    window.onload = function () {
+        checkPrice();
+    }
+
+
+    //수량변경 시 상품금액
+    const total = (cart) => {
+        let orderCount = document.getElementById(cart.id + "a").value;
+        $.ajax({
+            type: "get",
+            url: "/cart/change",
+            data: {
+                id: cart.id,
+                cartCount: orderCount
+            },
+            dataType: "text",
+            success: function (cartResult) {
+                console.log("성공")
+            },
+            error: function () {
+                console.log("실패");
+
+            }
+        });
+        const length = document.getElementById("cartList").value;
+        console.log(cart)
+        const itemPrice2 = cart.itemPrice;
+        let itemPrice = itemPrice2;
+        let totalPrice = orderCount * itemPrice;
+        let a = document.getElementsByName("price_amount")[0].value;
+        console.log(a);
+
+        document.getElementById(cart.id + "price_amount").value= totalPrice;
+        const money = Number(totalPrice).toLocaleString();
+        document.getElementById(cart.id + "price_amount2").textContent = money;
+        let itemPriceTotal = 0;
+        for (let i = 0; i < length; i++) {
+            itemPriceTotal += Number(document.getElementsByName("price_amount")[i].value);
+        }
+        console.log(itemPriceTotal)
+        document.querySelector(".item_price_total").innerHTML = itemPriceTotal;
+        checkPrice();
+    }
+
+</script>
+
+</html>

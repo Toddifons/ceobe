@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>🎈Find your Base:)-주문목록입니다.</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <!--    ajax cdn-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!--  //시간설정-->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <!--  폰트-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jua&family=Nanum+Gothic&family=Noto+Sans+KR&display=swap"
+          rel="stylesheet">
+    <style>
+        *{
+            font-family: 'Jua', sans-serif;
+            font-family: 'Nanum Gothic', sans-serif;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        .main{
+            width: 800px;
+            height: 409px;
+            left: 411px;
+            top: 85px;
+            margin-top: 50px;
+            /*가운데 정렬 margin: auto*/
+            margin-left: auto;
+            margin-right: auto;
+        }
+        span{
+            color: seagreen;
+        }
+        .pagination>.active>a:focus,
+        .pagination>.active>a:hover,
+        .pagination>.active>span,
+        .pagination>.active>span:focus,
+        .pagination>.active>span:hover {
+            /*css 우선순위 강제적용*/
+            background-color: seagreen !important;
+            border-color: seagreen !important;
+        }
+        .pagination>.active>a,
+        .pagination>.active>a:focus,
+        .pagination>.active>a:hover,
+        .pagination>.active>span,
+        .pagination>.active>span:focus,
+        .pagination>.active>span:hover {
+            /*css 우선순위 강제적용*/
+            background-color: seagreen !important;
+            border-color: seagreen !important;
+        }
+    </style>
+</head>
+<body style="background-color: white">
+<th:block th:replace="commonPages/sidebar :: sidebar"></th:block>
+<div class="main">
+    <div th:if="${orderList == 'empty'}">
+        <p>주문내역이 없습니다.</p>
+    </div>
+    <div th:unless="${orderList == 'empty'}">
+
+        <table class="table">
+            <tr>
+                <th>주문번호</th>
+                <th>상품이름</th>
+                <th>주문날짜</th>
+                <th>배송상태</th>
+                <th>구매자</th>
+
+            </tr>
+            <tr th:each="order: ${orderList}">
+                <td th:text="${order.id}"></td>
+                <td th:text="${order.orderName}"></td>
+                <td th:text="*{#temporals.format(order.getOrderCreatedTime(), 'yyyy-MM-dd')}"></td>
+
+                <td>
+                    <select th:onchange="orderStatus([[${order}]])" th:id="${order.id}">
+                        <option th:selected="${order.orderStatus} == '주문완료'" value="주문완료">주문완료</option>
+                        <option th:selected="${order.orderStatus} == '배송준비'" value="배송준비">배송준비</option>
+                        <option th:selected="${order.orderStatus} == '배송완료'" value="배송완료">배송완료</option>
+                    </select>
+                </td>
+                <td th:text="${order.memberName}"></td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div class="container" style="text-align: center">
+    <ul class="pagination justify-content-center">
+        <li class="page-item">
+            <!--첫페이지 요청 링크-->
+            <a class="page-link" th:href="@{/order/listAll(page=1 ,sort=${sort} , size=${size})}">
+                <span>First</span>
+            </a>
+        </li>
+
+        <li th:class="${orderList.first} ? 'disabled'" class="page-item">
+            <!--boardList.first: isFirst()
+                boardList.number: getNumber()-->
+            <a class="page-link" th:href="${orderList.first} ? '#' : @{/order/listAll(page=${orderList.number},sort=${sort},size=${size})}">
+                <span><</span> <!-- < -->
+            </a>
+        </li>
+
+        <!-- startPage ~ endPage 까지 숫자를 만들어주는 역할 -->
+        <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
+            th:class="${page == orderList.number + 1} ? 'page-item active'" class="page-item">
+            <a class="page-link" th:text="${page}" th:href="@{/order/listAll(page=${page},sort=${sort},size=${size})}"></a>
+        </li>
+
+        <!-- 다음 페이지 요청
+            현재 3페이지를 보고 있다면 다음 페이지는 4페이지임.
+            getNumber() 값은 2임.
+            따라서 4페이지를 보고 싶다면 getNumber()+2를 해야 컨트롤러에 4를 요청할 수 있음. -->
+        <li th:class="${orderList.last} ? 'disabled'">
+            <a class="page-link" th:href="${orderList.last} ? '#' : @{/order/listAll(page=${orderList.number + 2},sort=${sort},size=${size})}">
+                <span>&gt;</span>
+            </a>
+        </li>
+
+        <li class="page-item">
+            <a class="page-link" th:href="@{/order/listAll(page=${orderList.totalPages},sort=${sort},size=${size})}">
+                <span>Last</span>
+            </a>
+        </li>
+    </ul>
+</div>
+
+</body>
+<script th:inline="javascript">
+    const orderStatus = (order) => {
+        console.log("orderStatus");
+        let s = document.getElementById(order.id)
+        let status = s.options[s.selectedIndex].value
+        $.ajax({
+            url: '/order/status',
+            type: 'post',
+            data: {
+                id: order.id,
+                status: status
+            },
+            dataType: "text",
+            success: function (data) {
+                alert("변경되었습니다.")
+            },
+            error: function (error) {
+                alert(error)
+            }
+        })
+
+
+    }
+
+</script>
+</html>

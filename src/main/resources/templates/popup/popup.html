@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>평가하기</title>
+    <link rel="stylesheet" th:href="@{/css/starRating.css}" type="text/css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <!--  폰트-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jua&family=Nanum+Gothic&family=Noto+Sans+KR&display=swap"
+          rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Jua', sans-serif;
+            font-family: 'Nanum Gothic', sans-serif;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+    </style>
+</head>
+<body style="background-color: white">
+<div class="main" style="position: absolute">
+    <!--    리뷰 별점 매기기 팝업창-->
+    <form action="/comment/update" method="post">
+        <div class="modal-body">
+            <input type="hidden" name="id" th:value="${commentDTO.id}">
+            <input type="hidden" name="orderId" class="body-contents" id="contents" th:value="${commentDTO.orderId}">
+            <input type="text" class="form-control rounded-3 mt-3" name="commentContents" th:value="${commentDTO.commentContents}">
+            <div class="star-container" style="position: relative ; top: 15px ; right: 260px">
+                <div class="star"></div>
+                <div class="star"></div>
+                <div class="star"></div>
+                <div class="star"></div>
+                <div class="star"></div>
+            </div>
+            <h1 class="rating" name="starCount">0점</h1>
+            <input type="hidden" name="starCount" value="">
+
+            <script th:src="app.js"></script>
+        </div>
+        <div class="modal-footer">
+            <input type="button" class="btn btn-default" data-dismiss="modal" onclick="commentWrite()" value="수정하기">
+            <input type="button" class="btn btn-default" data-dismiss="modal" onclick="closeRE()" value="닫기">
+        </div>
+    </form>
+</div>
+
+</body>
+<script th:inline="javascript">
+
+    //Close
+    const closeRE = () => {
+        window.close();
+    }
+
+
+
+
+    // 별점
+    let stars = document.querySelectorAll(".star");
+    document.querySelector(".star-container").addEventListener("click", starRating);
+    let rating = document.querySelector(".rating");
+
+    function starRating(e) {
+        stars.forEach((star) => star.classList.remove("star__checked"));
+        const i = [...stars].indexOf(e.target);
+        if (i > -1) {
+            stars[i].classList.add("star__checked");
+            rating.textContent = `${stars.length - i}` + "점";
+        } else {
+            rating.textContent = `${0}` + "점";
+        }
+    }
+
+    // 후기 등록
+    const commentWrite = () => {
+        const commentWriter = [[${session.member.userId}]];
+        const commentContents = document.querySelector('input[name=commentContents]').value;
+        const orderId = document.querySelector('input[name=orderId]').value;
+        const starCount = document.querySelector('h1[name=starCount]').textContent;
+        const regex = /[^0-9]/g;
+        const result = starCount.replace(regex, "");
+        const number = parseInt(result);
+        document.querySelector('input[name=starCount]').value = number;
+
+
+        if (commentContents == "") {
+            alert("내용을 입력해주세요😰");
+            return;
+        }
+        if (number == 0) {
+            alert("별점을 입력해주세요😰");
+            return;
+        }
+        const form = document.querySelector('form');
+        form.submit();
+
+    }
+</script>
+</html>
