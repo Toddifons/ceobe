@@ -8,7 +8,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
-
+@Getter
+@Setter
 @Entity
 @Table(name = "item_file_table")
 public class ItemFileEntity extends BaseEntity {
