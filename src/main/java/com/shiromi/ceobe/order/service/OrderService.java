@@ -10,10 +10,15 @@ import com.shiromi.ceobe.orderItem.repository.OrderItemRepository;
 import com.shiromi.ceobe.member.repository.MemberRepository;
 import com.shiromi.ceobe.orderItem.entity.OrderItemEntity;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OrderService {
@@ -22,13 +27,18 @@ public class OrderService {
     private final OrderItemRepository orderItemRepository;
     private final ItemRepository itemRepository;
 
+    //주문하기
     public void save(OrderDTO orderDTO) {
-        System.out.println("세이브넘어옴orderDTO = " + orderDTO);
+
+        log.info("save : {}", orderDTO);
+
         Optional<MemberEntity> memberEntity1 = memberRepository.findById(orderDTO.getMemberId());
         ItemEntity itemEntity1 = itemRepository.findById(orderDTO.getItemId()).get();
         itemEntity1.setItemSellCount(itemEntity1.getItemSellCount() + orderDTO.getOrderCount());
-        System.out.println("구매수량"+orderDTO.getOrderCount());
-        System.out.println("재고수량"+itemEntity1.getItemCount());
+
+        log.info("orderCount : {}",orderDTO.getOrderCount());
+        log.info("ItmeCount : {}",itemEntity1.getItemCount());
+
         itemEntity1.setItemCount(itemEntity1.getItemCount() - orderDTO.getOrderCount());
         itemRepository.save(itemEntity1);
         if (memberEntity1.isPresent()) {
@@ -55,4 +65,41 @@ public class OrderService {
             orderItemRepository.save(itemEntity);
         }
     }
+    //장바구니에서 주문하기
+    @Transactional
+    public void save2(JSONArray itemDTOList, String userId) throws JSONException {
+        MemberEntity memberEntity = memberRepository.findByUserId(userId).get();
+        memberEntity.setPostcode(itemDTOList.getJSONObject(0).getString("postcode"));
+        memberEntity.setMemberAddress(itemDTOList.getJSONObject(0).getString("memberAddress"));
+        memberEntity.setDetailAddress(itemDTOList.getJSONObject(0).getString("detailAddress"));
+        memberEntity.setExtraAddress(itemDTOList.getJSONObject(0).getString("extraAddress"));
+        memberRepository.save(memberEntity);
+
+        for (int i = 0; i < itemDTOList.length(); i++) {
+            OrderItemEntity orderItemEntity = new OrderItemEntity();
+            OrderEntity orderEntity = new OrderEntity();
+            ItemEntity itemEntity = itemRepository.findByItemName(itemDTOList.getJSONObject(i).getString("itemName")).get();
+            itemEntity.setItemSellCount(itemEntity.getItemSellCount() + itemDTOList.getJSONObject(i).getInt("cartCount"));
+            itemEntity.setItemCount(itemEntity.getItemCount() - itemDTOList.getJSONObject(i).getInt("cartCount"));
+            orderEntity.setOrderStatus("주문완료");
+            orderEntity.setReview("리뷰작성");
+            orderEntity.setMemberEntity(memberEntity);
+            orderEntity.setOrderName(itemDTOList.getJSONObject(i).getString("itemName"));
+            orderItemEntity.setOrderName(itemDTOList.getJSONObject(i).getString("itemName"));
+            orderItemEntity.setOrderPrice(itemDTOList.getJSONObject(i).getInt("itemPrice"));
+            orderItemEntity.setOrderCount(itemDTOList.getJSONObject(i).getInt("cartCount"));
+            orderEntity=orderRepository.save(orderEntity);
+            orderItemEntity.setOrderEntity(orderEntity);
+            orderItemEntity.setItemEntity(itemEntity);
+            orderItemRepository.save(orderItemEntity);
+        }
+
+        for (int i = 0; i < itemDTOList.length(); i++) {
+            CartItemEntity cartItemEntity = cartItemRepository.findById(itemDTOList.getJSONObject(i).getLong("cartItemId")).get();
+            cartItemRepository.delete(cartItemEntity);
+        }
+        orderReadyRepository.deleteByMemberEntity(memberEntity);
+
+    }
+
 }
