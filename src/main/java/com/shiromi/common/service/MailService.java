@@ -1,4 +1,4 @@
-package com.shiromi.ceobe.common.service;
+package com.shiromi.common.service;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;

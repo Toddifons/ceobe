@@ -1,7 +1,7 @@
 package com.shiromi.ceobe.item.entity;
 
 import com.shiromi.ceobe.cartItem.entity.CartItemEntity;
-import com.shiromi.ceobe.common.entity.BaseEntity;
+import com.shiromi.common.entity.BaseEntity;
 import com.shiromi.ceobe.item.dto.ItemDTO;
 import com.shiromi.ceobe.itemFile.entity.ItemFileEntity;
 import com.shiromi.ceobe.orderItem.entity.OrderItemEntity;

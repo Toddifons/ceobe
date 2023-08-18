@@ -1,5 +1,7 @@
 package com.shiromi.ceobe.member.controller;
 
+import com.shiromi.common.service.PasswordChangeMailServiceImpl;
+import com.shiromi.common.service.RegisterMailServiceImpl;
 import com.shiromi.ceobe.member.dto.MemberDTO;
 import com.shiromi.ceobe.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +19,6 @@ import javax.servlet.http.HttpSession;
 @RequestMapping("/member")
 public class MemberController {
     private final MemberService memberService;
-
-
 
     //회원가입 화면
     @GetMapping("/save")
