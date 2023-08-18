@@ -1,6 +1,7 @@
 package com.shiromi.ceobe.order.dto;
 
 import com.shiromi.ceobe.common.entity.BaseEntity;
+import com.shiromi.ceobe.order.entity.OrderEntity;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -46,7 +47,25 @@ public class OrderDTO extends BaseEntity {
         this.memberName = memberName;
         this.review = review;
     }
-
+    public static <U> U toOrderDTO(OrderEntity orderEntity) {
+        OrderDTO orderDTO = new OrderDTO();
+        orderDTO.setId(orderEntity.getId());
+        orderDTO.setUserId(orderEntity.getMemberEntity().getUserId());
+        orderDTO.setOrderCount(orderEntity.getOrderItemEntityList().get(0).getOrderCount());
+        orderDTO.setOrderName(orderEntity.getOrderItemEntityList().get(0).getOrderName());
+        orderDTO.setMemberAddress(orderEntity.getMemberEntity().getMemberAddress());
+        orderDTO.setDetailAddress(orderEntity.getMemberEntity().getDetailAddress());
+        orderDTO.setExtraAddress(orderEntity.getMemberEntity().getExtraAddress());
+        orderDTO.setMemberMobile(orderEntity.getMemberEntity().getMemberMobile());
+        orderDTO.setOrderStatus(orderEntity.getOrderStatus());
+        orderDTO.setItemId(orderEntity.getOrderItemEntityList().get(0).getItemEntity().getId());
+        orderDTO.setMemberId(orderEntity.getMemberEntity().getId());
+        orderDTO.setOrderPrice(orderEntity.getOrderItemEntityList().get(0).getOrderPrice());
+        orderDTO.setMemberName(orderEntity.getMemberEntity().getMemberName());
+        orderDTO.setPostcode(orderEntity.getMemberEntity().getPostcode());
+        orderDTO.setOrderCreatedTime(orderEntity.getCreatedTime());
+        return (U) orderDTO;
+    }
 
 }
 
