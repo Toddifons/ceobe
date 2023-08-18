@@ -13,9 +13,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -99,7 +102,23 @@ public class OrderService {
             cartItemRepository.delete(cartItemEntity);
         }
         orderReadyRepository.deleteByMemberEntity(memberEntity);
+    }
 
+    @Transactional
+    public List<OrderDTO> findAll(String userId) {
+        MemberEntity memberEntity = memberRepository.findByUserId(userId).get();
+        List<OrderEntity> orderEntityList = orderRepository.findByMemberEntity(memberEntity, Sort.by(Sort.Direction.DESC, "id"));
+        System.out.println("orderEntityList = " + orderEntityList);
+        List<OrderDTO> orderDTOList = new ArrayList<>();
+        for (OrderEntity orderEntity : orderEntityList) {
+            OrderDTO orderDTO = new OrderDTO();
+            orderDTO.setId(orderEntity.getId());
+            orderDTO.setReview(orderEntity.getReview());
+            orderDTO.setOrderStatus(orderEntity.getOrderStatus());
+            orderDTO.setOrderName(orderEntity.getOrderName());
+            orderDTOList.add(orderDTO);
+        }
+        return orderDTOList;
     }
 
 }
