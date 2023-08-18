@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>🎈Find your Base:)-save</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <!--  폰트-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jua&family=Nanum+Gothic&family=Noto+Sans+KR&display=swap"
+          rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Jua', sans-serif;
+            font-family: 'Nanum Gothic', sans-serif;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        #item_save_form {
+            width: 600px;
+            height: 409px;
+            left: 411px;
+            top: 85px;
+            /*가운데 정렬 margin: auto*/
+            margin-top: 100px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        label {
+            margin-top: 20px;
+        }
+
+    </style>
+</head>
+
+<body style="background-color: white">
+<th:block th:replace="commonPages/header :: header"></th:block>
+<div class="container" id="item_save_form">
+    <form action="/item/save" method="post" enctype="multipart/form-data">
+        <div>
+            <label for="itemName">상품명</label>
+            <input type="text" name="itemName" id="itemName" placeholder="상품명" class="form-control">
+        </div>
+        <div class="box1" style="display: inline-block">
+            <label>대표 이미지</label>
+            <div>
+                <img id="preview" width="250" height="270">
+            </div>
+        </div>
+
+        <div style="display: inline-block;float: right; position: relative;">
+            <label for="itemCount">상품수량</label>
+            <input type="text" name="itemCount" id="itemCount" placeholder="상품수량" class="form-control"
+                   style="width: 100px;">
+        </div>
+
+        <div style="display: inline-block;float: right;">
+            <label for="itemPrice">상품가격</label>
+            <input type="text" name="itemPrice" id="itemPrice" placeholder="상품가격" class="form-control"
+                   style="width: 150px;">
+            <div style="float: right">
+                <div><label for="itemCategory" >카테고리</label></div>
+                <select name="itemCategory" class="form-select" id="itemCategory"
+                        style="font-size: 12px; width: 200px; height: 35px;">
+                    <option value="small" selected>PC</option>
+                    <option value="middle">컴퓨터부품</option>
+                    <option value="large">주변기기</option>
+                </select>
+            </div>
+        </div>
+
+        <div>
+            <label for="itemContents">상품설명</label>
+            <textarea name="itemContents" id="itemContents" cols="30" rows="10" placeholder="상품 설명"
+                      class="form-control"></textarea>
+        </div>
+
+        <input style="display: block;" type="file" name="itemFile" id="inputMultipleImage" multiple onchange="readURL(this)">
+        <!--        <div id="multipleContainer" style="width: 300px; height: 150px;"></div>-->
+        <input type="submit" value="저장" class="btn btn-success">
+
+
+    </form>
+</div>
+</body>
+<script type="text/javascript">
+    <!--대표이미지 미리보기-->
+    function readURL(input){
+        if(input.files && input.files[0]){
+            var reader = new FileReader();
+            reader.onload=function (e){
+                document.getElementById("preview").src = e.target.result;
+            };
+            reader.readAsDataURL(input.files[0]);
+        }else{
+            document.getElementById("preview").src="";
+        }
+    }
+
+
+</script>
+</html>
