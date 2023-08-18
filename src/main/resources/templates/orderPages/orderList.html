@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>🎈Find your Base:)-주문내역</title>
+  <link rel="stylesheet" th:href="@{/css/starRating.css}" type="text/css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <!--  폰트-->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jua&family=Nanum+Gothic&family=Noto+Sans+KR&display=swap"
+        rel="stylesheet">
+  <style>
+    *{
+      font-family: 'Jua', sans-serif;
+      font-family: 'Nanum Gothic', sans-serif;
+      font-family: 'Noto Sans KR', sans-serif;
+    }
+    .main{
+      width: 800px;
+      height: 409px;
+      left: 411px;
+      top: 85px;
+      margin-top: 50px;
+      /*가운데 정렬 margin: auto*/
+      margin-left: auto;
+      margin-right: auto;
+    }
+  </style>
+</head>
+<body style="background-color: white">
+<th:block th:replace="commonPages/header :: header"></th:block>
+<div class="main">
+  <div th:if="${orderList == 'empty'}">
+    <p>주문내역이 없습니다.</p>
+  </div>
+  <div th:unless="${orderList == 'empty'}">
+  <table class="table" id="table-form">
+    <tr>
+      <th>주문번호</th>
+      <th>상품이름</th>
+      <th>배송상태</th>
+      <th style="border-bottom: 1px solid #ddd">리뷰작성</th>
+    </tr>
+    <tr th:each="order: ${orderList}" style="border-bottom: 1px solid #ddd">
+      <td th:text="${order.id}"></td>
+      <td><a th:href="@{/items(orderName=${order.orderName})}" th:text="${order.orderName}"></a></td>
+      <td th:text="${order.orderStatus}"></td>
+
+      <ui th:if="${order.orderStatus == '배송완료'}">
+        <td th:if="${order.review} == '리뷰작성'">
+          <button type="button" th:id="${order.id}" class="btn btn-secondary" data-toggle="modal" data-target="#myModal"
+                  th:data-id="${order.id}" th:onclick="modal([[${order.id}]])"> [[${order.review}]]
+          </button>
+        </td>
+        <td th:unless="${order.review} == '리뷰작성'">
+          <input type="button" class="btn btn-secondary" disabled value="등록완료">
+          <input type="button" class="btn btn-secondary" onclick="reviewUpdate([[${order.id}]])">
+        </td>
+      </ui>
+    </tr>
+
+  </table>
+
+  </div>
+</div>
+<div class="modal fade" id="myModal" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">리뷰작성</h4>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" name="orderId" class="body-contents" id="contents">
+        <input type="text" class="form-control rounded-3 mt-3" name="commentContents" placeholder="내용">
+        <h1 class="rating" name="starCount">0점</h1>
+        <div class="star-container">
+          <div class="star"></div>
+          <div class="star"></div>
+          <div class="star"></div>
+          <div class="star"></div>
+          <div class="star"></div>
+        </div>
+        <script th:src="app.js"></script>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" onclick="commentWrite()">리뷰등록
+        </button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" onclick="closeRE()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+</body>
+<script th:inline="javascript">
+
+  //Close
+  const closeRE = () => {
+    document.querySelector('input[name=commentContents]').value = "";
+    document.querySelector('h1[name=starCount]').textContent = "0점";
+    stars.forEach((star) => star.classList.remove("star__checked"));
+  }
+
+
+  //후기 작성 버튼
+  const modal = (order) => {
+    console.log(order);
+    const orderId = document.getElementById('contents');
+    orderId.value = order;
+  }
+
+
+  // 별점
+  let stars = document.querySelectorAll(".star");
+  document.querySelector(".star-container").addEventListener("click", starRating);
+  let rating = document.querySelector(".rating");
+  function starRating(e) {
+    stars.forEach((star) => star.classList.remove("star__checked"));
+    const i = [...stars].indexOf(e.target);
+    if (i > -1) {
+      stars[i].classList.add("star__checked");
+      rating.textContent = `${stars.length - i}` + "점";
+    } else {
+      rating.textContent = `${0}` + "점";
+    }
+  }
+
+  // 후기 등록
+  const commentWrite = () => {
+    const commentWriter = [[${session.member.userId}]];
+    const commentContents = document.querySelector('input[name=commentContents]').value;
+    const orderId = document.querySelector('input[name=orderId]').value;
+    const starCount = document.querySelector('h1[name=starCount]').textContent;
+    const regex = /[^0-9]/g;
+    const result = starCount.replace(regex, "");
+    const number = parseInt(result);
+
+    if (commentContents == "") {
+      alert("내용을 입력해주세요.");
+      return;
+    }
+    if (number == 0) {
+      alert("별점을 입력해주세요.");
+      return;
+    }
+
+
+    $.ajax({
+      type: "get",
+      url: "/comment/save2",
+      data: {
+        commentWriter: commentWriter,
+        commentContents: commentContents,
+        orderId: orderId,
+        starCount: number
+      },
+      dataType: "text",
+      success: function (res) {
+        console.log("성공");
+        document.querySelector('input[name=commentContents]').value = "";
+        document.querySelector('h1[name=starCount]').textContent = "0점";
+        stars.forEach((star) => star.classList.remove("star__checked"));
+
+        const btnElement = document.getElementById(orderId);
+        btnElement.innerText = '등록완료';
+        btnElement.disabled = true;
+
+
+      },
+      error: function (err) {
+        console.log("실패");
+      }
+    });
+  }
+</script>
+</html>
