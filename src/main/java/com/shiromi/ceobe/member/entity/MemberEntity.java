@@ -8,6 +8,7 @@ import com.shiromi.ceobe.question.entity.QuestionEntity;
 import com.shiromi.ceobe.question.entity.ReplyEntity;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -19,10 +20,12 @@ import java.util.List;
 @Getter
 @Entity
 @Table(name = "member_table")
+@NoArgsConstructor
 public class MemberEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "member_id")
     private Long id; //고유번호
 
     @Column(length = 20, nullable = false, unique = true)
@@ -68,6 +71,23 @@ public class MemberEntity extends BaseEntity {
     @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<ReplyEntity> replyEntityList = new ArrayList<>();
 
+    @Builder
+    public MemberEntity(Long id, String userId, String memberPassword, String memberEmail, String memberName, String memberMobile, String memberAddress, String detailAddress, String extraAddress, String postcode, List<OrderEntity> orderEntityList, List<CartEntity> cartEntityList, List<QuestionEntity> questionEntityList, List<ReplyEntity> replyEntityList) {
+        this.id = id;
+        this.userId = userId;
+        this.memberPassword = memberPassword;
+        this.memberEmail = memberEmail;
+        this.memberName = memberName;
+        this.memberMobile = memberMobile;
+        this.memberAddress = memberAddress;
+        this.detailAddress = detailAddress;
+        this.extraAddress = extraAddress;
+        this.postcode = postcode;
+        this.orderEntityList = orderEntityList;
+        this.cartEntityList = cartEntityList;
+        this.questionEntityList = questionEntityList;
+        this.replyEntityList = replyEntityList;
+    }
 
     public static MemberEntity toSaveEntity(MemberDTO memberDTO){
         MemberEntity memberEntity = new MemberEntity();

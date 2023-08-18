@@ -15,7 +15,7 @@ import java.util.List;
 @Setter
 @Getter
 @Entity
-@Table(name = "order")
+@Table(name = "order_table")
 @NoArgsConstructor
 public class OrderEntity extends BaseEntity {
 
