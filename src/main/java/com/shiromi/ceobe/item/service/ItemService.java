@@ -6,6 +6,10 @@ import com.shiromi.ceobe.item.repository.ItemRepository;
 import com.shiromi.ceobe.itemFile.entity.ItemFileEntity;
 import com.shiromi.ceobe.itemFile.repository.ItemFileRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -44,6 +48,26 @@ public class ItemService {
             return savedId;
         }
     }
+    //검색기능
+    @Transactional
+    public Page<ItemDTO> findAll(Pageable pageable, String sort, String search, String category) {
+        int page = pageable.getPageNumber() - 1;
+        int pageLimit = pageable.getPageSize();
+        Page<ItemEntity> itemEntityList = itemRepository.findAll(PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, sort)));
+        if (sort.equals("itemPrice")) {
+            itemEntityList = itemRepository.findByItemNameContaining(search, PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.ASC, sort)));
+            Page<ItemDTO> itemDTOList = itemEntityList.map(ItemDTO::toItemDTO);
+            return itemDTOList;
+        }
+        if (category.equals("itemName")) {
+            itemEntityList = itemRepository.findByItemNameContaining(search, PageRequest.of(page, pageLimit, Sort.by(sort).descending()));
+            Page<ItemDTO> itemDTOList = itemEntityList.map(ItemDTO::toItemDTO);
+            return itemDTOList;
+        }
+
+        Page<ItemDTO> itemDTOList = itemEntityList.map(ItemDTO::toItemDTO);
+        return itemDTOList;
+    }
 
     //이름으로 검색
     @Transactional
@@ -55,6 +79,7 @@ public class ItemService {
             return null;
         }
     }
+    //업데이트
     @Transactional
     public Long update(ItemDTO itemDTO) throws IOException {
         if (itemDTO.getItemFileUpdate().get(0).isEmpty()) {
