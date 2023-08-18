@@ -51,6 +51,16 @@ public class ItemController {
         model.addAttribute("category", category);
         return "itemPages/itemMain";
     }
+
+    //상품 상세조회
+    @GetMapping("/item/")
+    public String findById(@RequestParam("itemId") Long itemId, Model model){
+        System.out.println( "itemId = " + itemId);
+        ItemDTO itemDTO = itemService.findById(itemId);
+        model.addAttribute("item",itemDTO);
+        return "itemPages/itemDetail";
+    }
+
     //상품 수정 화면
     @GetMapping("/item/update/{id}")
     public String updateForm(@PathVariable Long id, Model model){
