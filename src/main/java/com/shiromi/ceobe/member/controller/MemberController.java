@@ -59,13 +59,6 @@ public class MemberController {
         return "redirect:" + redirectURL;
     }
 
-//    //로그인 화면
-//    @GetMapping("/login")
-//    public String loginForm() {
-//        return "/memberPages/memberLogin";
-//    }
-
-
     //로그인 처리
     @PostMapping("/login")
     public @ResponseBody String login(@ModelAttribute MemberDTO memberDTO, HttpSession session, @RequestParam(value = "redirectURL", defaultValue = "/") String redirectURL) {
@@ -153,9 +146,6 @@ public class MemberController {
         model.addAttribute("redirectURL", redirectURL);
         return "redirect:" + redirectURL;
     }
-
-
-
 
 
     //일반 로그아웃
