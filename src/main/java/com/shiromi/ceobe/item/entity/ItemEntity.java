@@ -1,8 +1,10 @@
 package com.shiromi.ceobe.item.entity;
 
+import com.shiromi.ceobe.cartItem.entity.CartItemEntity;
 import com.shiromi.ceobe.common.entity.BaseEntity;
 import com.shiromi.ceobe.item.dto.ItemDTO;
 import com.shiromi.ceobe.itemFile.entity.ItemFileEntity;
+import com.shiromi.ceobe.orderItem.entity.OrderItemEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -49,6 +51,13 @@ public class ItemEntity extends BaseEntity {
     @OneToMany(mappedBy = "itemEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<ItemFileEntity> itemFileEntityList = new ArrayList<>();
 
+    //item(상품) : order_item(주문) = 1 : M
+    @OneToMany(mappedBy = "itemEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<OrderItemEntity> orderItemEntityList = new ArrayList<>();
+
+    //item(상품) : cart_item(장바구니 상품) = 1 : M
+    @OneToMany(mappedBy = "itemEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<CartItemEntity> cartItemEntityList = new ArrayList<>();
 
     @Builder
     public ItemEntity(Long id, String itemName, int itemPrice, String itemContents, int itemCount, int fileAttachedItem, String itemCategory, int itemSellCount) {
