@@ -12,6 +12,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "cart_table")
+@Setter
+@Getter
 public class CartEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

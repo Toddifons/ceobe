@@ -22,8 +22,9 @@ public class ItemDTO {
     private int itemCount;
     private String itemCategory;
     private int fileAttachedItem;
-
+    private String userId;
     private int itemSellCount;
+    private int cartCount;
 
     private List<MultipartFile> itemFile;
     private List<MultipartFile> itemFileUpdate;
@@ -72,6 +73,7 @@ public class ItemDTO {
         }
         return itemDTO;
     }
+
 
 
 }
