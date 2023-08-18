@@ -5,7 +5,7 @@ import com.shiromi.common.entity.BaseEntity;
 import com.shiromi.ceobe.member.dto.MemberDTO;
 import com.shiromi.ceobe.order.entity.OrderEntity;
 import com.shiromi.ceobe.question.entity.QuestionEntity;
-import com.shiromi.ceobe.question.entity.ReplyEntity;
+import com.shiromi.ceobe.reply.entity.ReplyEntity;
 import com.shiromi.config.auth.RoleType;
 import lombok.Builder;
 import lombok.Getter;
@@ -78,7 +78,7 @@ public class MemberEntity extends BaseEntity {
     private List<ReplyEntity> replyEntityList = new ArrayList<>();
 
     @Builder
-    public MemberEntity(Long id, String userId, String memberPassword, String memberEmail, String memberName, String memberMobile, String memberAddress, String detailAddress, String extraAddress, String postcode, List<OrderEntity> orderEntityList, List<CartEntity> cartEntityList, List<QuestionEntity> questionEntityList, List<ReplyEntity> replyEntityList) {
+    public MemberEntity(Long id, String userId, String memberPassword, String memberEmail, String memberName, String memberMobile, String memberAddress, String detailAddress, String extraAddress, String postcode, List<OrderEntity> orderEntityList, List<CartEntity> cartEntityList, List<QuestionEntity> questionEntityList, List<ReplyEntity> replyEntityList, RoleType role) {
         this.id = id;
         this.userId = userId;
         this.memberPassword = memberPassword;
