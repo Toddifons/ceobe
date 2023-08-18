@@ -33,9 +33,10 @@ public class SecurityConfig {
 
                 //인증 권한 설정. 현재 아래 경로 외에 권한이 필요하다고만 되어 있음.
                 .authorizeHttpRequests(authroize -> authroize
-                        .antMatchers("/", "/auth/**", "/js/**", "/css/**", "/image/**").permitAll()
-                        .anyRequest()
-                        .authenticated())
+                        .anyRequest().permitAll())
+//                        .antMatchers("/", "/auth/**", "/js/**", "/css/**", "/image/**").permitAll()
+//                        .anyRequest()
+//                        .authenticated())
 
                 //기본 로그인 설정
                 .formLogin(fromLogin -> fromLogin.loginPage("/auth/loginForm")
