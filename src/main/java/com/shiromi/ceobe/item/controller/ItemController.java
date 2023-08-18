@@ -4,8 +4,10 @@ import com.shiromi.ceobe.item.dto.ItemDTO;
 import com.shiromi.ceobe.item.service.ItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.io.IOException;
@@ -25,5 +27,11 @@ public class ItemController {
     public String save(@ModelAttribute ItemDTO itemDTO) throws IOException {
         itemService.save(itemDTO);
         return "redirect:/item/main";
+    }
+    @GetMapping("/item/update/{id}")
+    public String updateForm(@PathVariable Long id, Model model){
+        ItemDTO itemDTO = itemService.findById(id);
+        model.addAttribute("item",itemDTO);
+        return "itemPages/itemUpdate";
     }
 }
