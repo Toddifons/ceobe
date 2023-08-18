@@ -68,6 +68,7 @@ public class ItemController {
         model.addAttribute("item",itemDTO);
         return "itemPages/itemUpdate";
     }
+
     //상품 수정 처리
     @PostMapping("/item/update")
     public String update (@ModelAttribute ItemDTO itemDTO,Model model) throws IOException{
@@ -77,11 +78,21 @@ public class ItemController {
         model.addAttribute("board",itemDTO1);
         return "redirect:/item/main";
     }
+
     //상품 삭제
     @GetMapping("/item/delete/{id}")
     public String delete(@PathVariable Long id){
         itemService.delete(id);
         return"redirect:/item/main";
+    }
+
+    //주문확인에서 상품 이름으로 상세조회
+    @GetMapping("/items")
+    public String findById(@RequestParam("orderName") String orderName, Model model){
+        System.out.println(" orderName = " + orderName + ", model = " + model);
+        ItemDTO itemDTO = itemService.findByOrderName(orderName);
+        model.addAttribute("item",itemDTO);
+        return "itemPages/itemDetail";
     }
 
 }
