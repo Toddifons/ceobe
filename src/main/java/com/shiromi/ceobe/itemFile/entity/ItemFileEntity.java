@@ -4,6 +4,7 @@ import com.shiromi.ceobe.common.entity.BaseEntity;
 import com.shiromi.ceobe.item.entity.ItemEntity;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -11,6 +12,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 @Table(name = "item_file_table")
 public class ItemFileEntity extends BaseEntity {
     @Id
