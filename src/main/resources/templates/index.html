@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<title>🎈Find your Base:)</title>
+<head>
+  <!-- Swiper -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.5.1/css/swiper.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.5.1/js/swiper.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <!--  폰트-->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jua&family=Nanum+Gothic&family=Noto+Sans+KR&display=swap"
+        rel="stylesheet">
+
+  <style>
+    .profile-user-img {
+      width: 250px;
+      height: 250px;
+      border-radius: 70%;
+      overflow: hidden;
+    }
+
+    .profile-user-img-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    html, body {
+      position: relative;
+      height: 100%;
+    }
+
+    body {
+      background: #eee;
+      margin: 0;
+      padding: 0;
+    }
+
+    .swiper-container {
+      width: 100%;
+      height: 100%;
+    }
+
+    .swiper-slide {
+      text-align: center;
+      font-size: 18px;
+      background: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  </style>
+</head>
+<body>
+<!--top버튼-->
+<a href="#" id="top"><img th:src="@{img/top_btn.png}" alt="top_btn"></a>
+<!--헤더 불러오기-->
+<th:block th:replace="commonPages/header :: header"></th:block>
+<div id="wrap">
+  <div id="visual_bg">
+    <div id="visual_txt">
+      <p></p>
+      <p>감성 개발자를 위한 <br> <em>ZERO-BASE MALL</em></p>
+    </div>
+  </div>
+
+<!--  메인배너 하단 회사소개-->
+  <div id="contents" style="position: relative">
+    <article style="width: 1000px ; height: 450px;">
+      <div id="what">
+        <h2>FIND YOUR BASE</h2>
+        <p>개발자, 빠르고 쾌적한 환경이 우선입니다. <br>
+          불철주야 야근하시는 우리 개발자님들을 위해 IT기기 및 부품을 판매하는 “ZeroBaseMall”입니다. <br>
+          일터에서도, 집에서도, 전쟁터에서도 걱정없이 개발하세요!
+          <br> 데스크탑, 노트북, 각종 부품들 <br>
+          ZeroBase 는 협력업체에서 직접보고 셀렉한 최상급 부품만을 판매합니다
+        </p>
+        <div class="profile-user-img" style="position: relative ; left: 500px ; top: -240px">
+          <img th:src="@{/img/main2.jpg}" class="profile-user-img-img">
+        </div>
+      </div>
+    </article>
+
+    <div id="intro_bg" th:if="${message} != 'null'">
+      <section>
+        <h2>최신 상품♨️</h2>
+        <div id="pdt">
+          <div class="swiper-container">
+            <div class="swiper-wrapper">
+              <div class="swiper-slide" th:each="item: ${itemList}">
+                <li>
+                  <a th:href="@{/item/(itemId=${item.id})}">
+                    <div th:if="${item.fileAttachedItem == 1}">
+                      <img th:src="@{|/upload/${item.storedFileNameItem.get(0)}}" alt="" width="200" height="150">
+                    </div>
+                    <p><img th:src="@{/img/new.png}" alt="new">
+                    <p class="read"><a th:href="@{/item/(itemId=${item.id})}"
+                                       th:text="${item.itemName}"></a>
+                    </p>
+                    <em style=" font: italic bold 1em Georgia, serif ;"
+                        th:text="${#numbers.formatCurrency(item.itemPrice)}"></em>
+                    </p>
+                  </a>
+                </li>
+              </div>
+            </div>
+            <div class="swiper-pagination"></div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+<!--  footer-->
+  <footer>
+    <div id="f_top">
+      <div id="left">
+        <p>주소 : 12345 대구광역시 동구 <br>
+        <address>전화 : 02-1234-1234 팩스 : 02-1234-1234</address>
+        <p>Contact pariahs9311@naver.com for more information.</p>
+      </div>
+
+      <div id="tle_right">
+        <div id="right">
+          <p><em>고객센터</em> <br>
+            <span>02-1234-1234</span><br>
+            평일 09:00-18:00, 점심 12:00-16:00<br>
+            주말, 공휴일 휴무</p>
+        </div>
+
+        <div id="right2">
+          <p><em>은행계좌</em> <br>
+            <b>기업 225-02407601-011</b> <br>
+            예금주 : 김예진</p>
+        </div>
+
+      </div>
+    </div>
+
+    <div id="f_btm_bg"></div>
+    <div></div>
+  </footer>
+
+</div>
+</body>
+</html>
