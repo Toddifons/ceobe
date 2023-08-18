@@ -30,7 +30,7 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 
 	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
-
+	implementation 'org.springframework.security:spring-security-oauth2-client'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
 //    runtimeOnly 'com.mysql:mysql-connector-j'
