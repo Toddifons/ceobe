@@ -70,4 +70,12 @@ public class OrderController {
         String result = orderService.checkOrder(userId,itemDTOList);
         return result;
     }
+
+    //개인 주문목록
+    @GetMapping("/order/list")
+    public String list(@RequestParam("userId")String userId, Model model) {
+        List<OrderDTO>orderDTOList = orderService.findAll(userId);
+        model.addAttribute("orderList", orderDTOList);
+        return "orderPages/orderList";
+    }
 }
