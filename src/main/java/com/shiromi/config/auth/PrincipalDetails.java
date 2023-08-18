@@ -29,7 +29,7 @@ public class PrincipalDetails implements UserDetails, OAuth2User {
     }
 
     //내가 공부하던 시큐리티에서는 쓰지 않았음 확인할 필요 있다.
-    public MemberEntity getUser() {
+    public MemberEntity getMemberEntity() {
         return memberEntity;
     }
 
@@ -63,7 +63,7 @@ public class PrincipalDetails implements UserDetails, OAuth2User {
 
     @Override
     public String getUsername() {
-        return memberEntity.getMemberName());
+        return memberEntity.getMemberName();
     }
 
     //계정 만료 여부 (true: 만료x)

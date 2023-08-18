@@ -1,9 +1,12 @@
 package com.shiromi.config.auth;
 
+import com.shiromi.ceobe.member.entity.MemberEntity;
 import com.shiromi.ceobe.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -11,14 +14,16 @@ import org.springframework.stereotype.Service;
 public class PrincipalDetailsService implements UserDetailsService {
 
     @Autowired
-    private final MemberRepository userRepository;
+    private final MemberRepository memberRepository;
 
     //login 동작을 할 때 실행됨.
     //view에서 파라미터로 넘어온 username을 토대로 User 찾아서 객체를 PrincipalDetails 객체에 저장하는 메소드
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        User userEntity = userRepository.findByUsername(username);
+        MemberEntity userEntity = memberRepository.findByMemberName(username).orElseThrow(
+                () -> new IllegalArgumentException("User Not Found")
+        );
 
         if(userEntity != null) {
             return new PrincipalDetails(userEntity);

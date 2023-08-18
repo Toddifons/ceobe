@@ -6,6 +6,7 @@ import com.shiromi.ceobe.member.repository.MemberRepository;
 import java.util.Map;
 
 import com.shiromi.config.auth.PrincipalDetails;
+import com.shiromi.config.auth.RoleType;
 import com.shiromi.config.oauth.provider.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -33,13 +34,15 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
         String provider = oauth2UserInfo.getProvider();
         String providerId = oauth2UserInfo.getProviderID();
-        String username = provider+"_"+providerId;
+        String memberName = provider+"_"+providerId;
         //OAuth 로그인은 비밀번호를 저장하지 않음
         String password = encoderPwd.encode("Oauth2 Loging User");
         String email = oauth2UserInfo.getEmail();
         //String role = "ROLE_USER";
 
-        MemberEntity memberEntity = memberRepository.findByMemberName(memberName);
+        MemberEntity memberEntity = memberRepository.findByMemberName(memberName).orElseThrow(
+                () -> new IllegalArgumentException("Member not Found")
+        );
 
         if(memberEntity != null) {
             System.out.println("이미 회원입니다. 이전에 OAuth로 회원가입을 진행했습니다.");
@@ -47,10 +50,9 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
             memberEntity = memberEntity.builder()
                     .memberName(memberEntity.getMemberName())
                     .memberPassword(memberEntity.getMemberPassword())
-                    .email(email)
+                    .memberEmail(email)
                     .role(RoleType.USER)
-                    .provider(providerId)
-                    .providerId(providerId)
+                    .userId(providerId)
                     .build();
             memberRepository.save(memberEntity);
         }

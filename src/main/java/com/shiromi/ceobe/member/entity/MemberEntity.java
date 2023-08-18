@@ -6,6 +6,7 @@ import com.shiromi.ceobe.member.dto.MemberDTO;
 import com.shiromi.ceobe.order.entity.OrderEntity;
 import com.shiromi.ceobe.question.entity.QuestionEntity;
 import com.shiromi.ceobe.question.entity.ReplyEntity;
+import com.shiromi.config.auth.RoleType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -55,6 +56,11 @@ public class MemberEntity extends BaseEntity {
 
     @Column(length = 100)
     private String postcode;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private RoleType role;
+
     //    member(회원) : order(주문) = 1 : M
     @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<OrderEntity> orderEntityList = new ArrayList<>();
@@ -72,7 +78,7 @@ public class MemberEntity extends BaseEntity {
     private List<ReplyEntity> replyEntityList = new ArrayList<>();
 
     @Builder
-    public MemberEntity(Long id, String userId, String memberPassword, String memberEmail, String memberName, String memberMobile, String memberAddress, String detailAddress, String extraAddress, String postcode, List<OrderEntity> orderEntityList, List<CartEntity> cartEntityList, List<QuestionEntity> questionEntityList, List<ReplyEntity> replyEntityList) {
+    public MemberEntity(Long id, String userId, String memberPassword, String memberEmail, String memberName, String memberMobile, String memberAddress, String detailAddress, String extraAddress, String postcode, List<OrderEntity> orderEntityList, List<CartEntity> cartEntityList, List<QuestionEntity> questionEntityList, List<ReplyEntity> replyEntityList, RoleType role) {
         this.id = id;
         this.userId = userId;
         this.memberPassword = memberPassword;
@@ -87,6 +93,7 @@ public class MemberEntity extends BaseEntity {
         this.cartEntityList = cartEntityList;
         this.questionEntityList = questionEntityList;
         this.replyEntityList = replyEntityList;
+        this.role = role;
     }
 
     public static MemberEntity toSaveEntity(MemberDTO memberDTO){

@@ -1,6 +1,7 @@
 package com.shiromi.config;
 
 
+import com.shiromi.config.oauth.PrincipalOauth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +17,9 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableGlobalMethodSecurity(prePostEnabled = true) // Spring Security 활성화 / 해당 메소드 실행 전 체크함.
 @RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final PrincipalOauth2UserService principalOauth2UserService;
+
     @Bean
     public AuthenticationManager authenticationManager(
             AuthenticationConfiguration authenticationConfiguration) throws Exception{
@@ -44,5 +48,4 @@ public class SecurityConfig {
                         .userService(principalOauth2UserService))
                 .build();
     }
-}
 }

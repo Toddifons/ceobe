@@ -68,8 +68,8 @@
                 </ul>
 
 <!--                로고부분 헤더-->
-                <div id="h_btn" style="width: 950px; position: relative">
-                    <h1><a href="/"><img th:src="@{/img/zb_logo.jpg}" width="150" height="100" alt="도그쿡"></a></h1>
+                <div id="h_btm" style="width: 950px; position: relative">
+                    <a href="/"><img th:src="@{/img/zb_logo.jpg}" width="150" height="100" alt="도그쿡"></a>
                     <nav>
                         <div class="wrap" style="position: relative ; float: left">
                             <img th:src="@{/img/today.jpg}" alt="top_btn">
@@ -84,7 +84,6 @@
                                         </select>
                                         <input type="text" class="form-control" placeholder="Search" id="searchWord" th:value="${searchWord}" name="searchWord">
                                         <input type="button" value="검색" class="form-control" onclick="searchQ2()">
-
                                     </div>
                                 </div>
                             </div>
