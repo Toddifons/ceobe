@@ -71,6 +71,24 @@
                 <div id="h_btn" style="width: 950px; position: relative">
                     <h1><a href="/"><img th:src="@{/img/zb_logo.jpg}" width="150" height="100" alt="도그쿡"></a></h1>
                     <nav>
+                        <div class="wrap" style="position: relative ; float: left">
+                            <img th:src="@{/img/today.jpg}" alt="top_btn">
+                            <div class="search">
+                                <!-- 부트스트랩 검색창 -->
+                                <div class="navbar-form navbar-left" role="search">
+                                    <div class="form-group">
+                                        <select class="form-control" id="searchType">
+                                            <option value="1" >상품 이름</option>
+                                            <option value="4">판매자</option>
+                                            <option value="9">전체</option>
+                                        </select>
+                                        <input type="text" class="form-control" placeholder="Search" id="searchWord" th:value="${searchWord}" name="searchWord">
+                                        <input type="button" value="검색" class="form-control" onclick="searchQ2()">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 <!--                        광고배너 넣으면 좋을듯 합니다-->
                         <ul style="margin-left: 20px;">
                             <li style="width: 80px ; height: 100px"><a class="aa" href="/item/category1">PC</a></li>
