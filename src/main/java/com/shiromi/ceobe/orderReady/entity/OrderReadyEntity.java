@@ -10,11 +10,12 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
-@Table(name="order_ready")
+@Table(name="order_ready_table")
 public class OrderReadyEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "order_ready_id")
     private Long id;
 
     @Column
