@@ -155,6 +155,12 @@ public class OrderService {
         }
         return cartItemDTOList;
     }
+    //업데이트
+    public void update(Long id, String status) {
+        OrderEntity orderEntity=orderRepository.findById(id).get();
+        orderEntity.setOrderStatus(status);
+        orderRepository.save(orderEntity);
+    }
 
 
 
