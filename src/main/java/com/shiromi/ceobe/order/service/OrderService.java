@@ -206,4 +206,13 @@ public class OrderService {
         return cartItemDTOList;
     }
 
+    @Transactional
+    public String cancel(Long memberId) {
+        MemberEntity memberEntity = memberRepository.findById(memberId).get();
+        String userId = memberEntity.getUserId();
+        log.info("삭제전 : {}",memberEntity);
+        orderReadyRepository.deleteByMemberEntity(memberEntity);
+        return userId;
+    }
+
 }
