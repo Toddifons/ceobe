@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>🎈Find your Base:)-상세보기</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/style/style3.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/itemDetail.css}" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!--    시간설정-->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+    <!--  폰트-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jua&family=Nanum+Gothic&family=Noto+Sans+KR&display=swap"
+          rel="stylesheet">
+    <!--  별점-->
+    <link rel="stylesheet" th:href="@{/css/star.css}" type="text/css">
+</head>
+<body style="background-color: white">
+<th:block th:replace="commonPages/header :: header"></th:block>
+
+<form action="#" method="get" id="loc" class="image-form">
+    <div th:if="${item.fileAttachedItem == 1}" class="image-form">
+        <!--                <th>파일</th>-->
+        <div>
+            <input type="hidden" th:value="${item.storedFileNameItem.get(0)}" name="itemImage" id="itemImage">
+            <img th:src="@{|/upload/${item.storedFileNameItem.get(0)}}" alt="" width="300" height="300" id="lgImage">
+        </div>
+        <div th:each="fileName: ${item.storedFileNameItem}">
+            <img th:src="@{|/upload/${fileName}}" alt="" width="50" height="50" class="smImage-form"
+                 th:onclick="imageClick([[${fileName}]])">
+        </div>
+    </div>
+
+    <div class="information">
+        <div>
+            <!--<th>상품명</th>-->
+            <input type="hidden" name="id" th:value="${item.id}" id="itemId">
+            <input type="hidden" name="itemPrice" th:value="${item.itemPrice}">
+            <input type="hidden" name="itemName" th:value="${item.itemName}">
+            <h2 id="itemName" th:text="${item.itemName}"></h2>
+        </div>
+        <div>
+            <div th:if="${item.itemCount == 0}">
+                <label style="margin-right: 40px">구매수량</label>
+                <p style="color: red; font-weight: bold;">품절</p>
+            </div>
+            <div th:unless="${item.itemCount == 0}">
+                <label style="margin-right: 40px">구매수량</label>
+                <input type="number" id="itemCountInput" min="1" max="100" value="1" name="cartCount"
+                       th:onchange="total([[${item.itemCount}]])" class="text-form">
+            </div>
+        </div>
+        <div>
+            <label style="margin-right: 40px">택배배송</label>
+            <p class="text-form">무료배송</p>
+        </div>
+        <div style="margin-bottom: 20px;">
+            <label style="margin-right: 20px">총 상품 금액</label>
+            <div style="color: seagreen ; font-size:xx-large ; font-weight: bold" id="totalPrice" class="text-form"
+                 th:text="${#numbers.formatInteger(item.itemPrice,0,'COMMA')}+'원'"></div>
+            <!--            <div style="color: seagreen ; font-size:xx-large ; font-weight: bold" id="totalPrice" class="text-form" th:text="${item.itemPrice}+'원'"></div>-->
+        </div>
+
+        <div th:if="${session.member} != null">
+            <div th:if="${item.itemCount != 0}">
+                <input type="button" class="btn btn-outline-dark" value="장바구니" onclick="cart()" style="float: left">
+                <input type="button" class="btn btn-success" value="구매하기" onclick="orderItem()" style="float: left">
+            </div>
+            <input type="hidden" value="loginOk" name="loginCheck">
+        </div>
+        <div th:unless="${session.member}">
+            <div th:if="${item.itemCount != 0}">
+                <input type="button" class="btn btn-outline-dark" value="장바구니" onclick="cart()" style="float: left">
+                <input type="button" class="btn btn-success" value="구매하기" onclick="orderItem()" style="float: left">
+            </div>
+            <input type="hidden" value="loginNo" name="loginCheck">
+        </div>
+    </div>
+</form>
+
+<div style="text-align: center; margin-top: 80px; margin-bottom: 160px">
+    <!--                <th>설명</th>-->
+    <div style="white-space:pre;" th:text="${item.itemContents}"></div>
+</div>
+
+<div class="container mt-5" id="comment-list">
+    <div th:if="${commentList == 'empty'}">
+        <p>작성된 후기가 없습니다.</p>
+    </div>
+    <div th:unless="${commentList == 'empty'}">
+        <table class="table">
+            <tr>
+                <th style="padding-left: 200px;">주문후기</th>
+                <th style="width: 146px;">작성자</th>
+                <th style="width: 216px;">작성시간</th>
+                <th style="width: 116px;">별점</th>
+            </tr>
+            <tr th:each="comment: ${commentList}">
+                <input type="hidden" th:value="${comment.id}" name="commentId">
+                <td th:text="${comment.commentContents}" style="padding-left: 30px;"></td>
+                <td th:text="${comment.commentWriter}" class="comment-font"></td>
+                <td th:text="*{#temporals.format(comment.commentCreatedDate,'yyyy-MM-dd HH:mm')}"
+                    class="comment-font"></td>
+                <td>
+                    <div class="star-container">
+                        <div th:each="num : ${#numbers.sequence(1,comment.starCount)}" class="star"></div>
+                    </div>
+                </td>
+                <td>
+                    <button th:if="${session.member.userId == comment.commentWriter}" class="btn btn-outline-dark" th:onclick="commentUpdate([[${comment.id}]])">수정</button>
+                    <button th:if="${session.member.userId == comment.commentWriter}" class="btn btn-outline-dark" th:onclick="commentDelete([[${comment}]])">삭제</button>
+                </td>
+            </tr>
+        </table>
+        <div class="container text-center">
+            <ul class="pagination justify-content-center">
+                <li class="page-item">
+                    <!--첫페이지 요청 링크 /board?page=1-->
+                    <a class="page-link" th:href="@{/item/(page=1,itemId=${itemId})}">
+                        <span>First</span>
+                    </a>
+                </li>
+                <li th:class="${commentList.first} ? 'disabled'" class="page-item">
+                    <!--boardList.first: isFirst()
+                        boardList.number: getNumber()-->
+                    <a class="page-link"
+                       th:href="${commentList.first} ? '#' : @{/item/(page=${commentList.number},itemId=${itemId})}">
+                        <!-- 사용자 3페이지, number 2 /board?page=2-->
+                        <span><</span> <!-- < -->
+                    </a>
+                </li>
+
+                <!-- startPage ~ endPage 까지 숫자를 만들어주는 역할 -->
+                <!--for(int page=startPage; page<=endPage; page++)-->
+                <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
+                    th:class="${page == commentList.number + 1} ? 'page-item active'" class="page-item">
+                    <a class="page-link" th:text="${page}" th:href="@{/item/(page=${page},itemId=${itemId})}"></a>
+                </li>
+
+                <!-- 다음 페이지 요청
+                    현재 3페이지를 보고 있다면 다음 페이지는 4페이지임.
+                    getNumber() 값은 2임.
+                    따라서 4페이지를 보고 싶다면 getNumber()+2를 해야 컨트롤러에 4를 요청할 수 있음. -->
+                <li th:class="${commentList.last} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="${commentList.last} ? '#' : @{/item/(page=${commentList.number + 2},itemId=${itemId})}">
+                        <span>&gt;</span>
+                    </a>
+                </li>
+
+                <li class="page-item">
+                    <!--마지막페이지 요청 링크-->
+                    <a class="page-link" th:href="@{/item/(page=${commentList.totalPages},itemId=${itemId})}">
+                        <span>Last</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div id="comment-page">
+
+</div>
+</body>
+
+<script th:inline="javascript">
+    //코멘트 삭제
+    const commentDelete = (comment) => {
+        let id = comment.id
+        let itemId = [[${item.id}]]
+        if (confirm("정말삭제하시겠습니까?") == true){
+            location.href = "/comment/delete?commentId=" + id + "&itemId=" + itemId
+        }else {
+            return false;
+        }
+
+    }
+
+
+    //코멘트 수정
+    const commentUpdate = (commentId) => {
+        console.log("코멘트업데이트 넘어옴")
+        let popOption = "width=500, height=500, resizable=no, scrollbars=no, status=no;";
+        console.log("팝업창 호출")
+        window.open("/comment/update?commentId=" + commentId, 'popup', popOption);
+    }
+
+
+    //이미지 클릭시 전환
+    const imageClick = (item) => {
+        console.log(item);
+        const smImage = item;
+        console.log(smImage);
+        console.log(smImage[0]);
+        $("#lgImage").attr("src", "/upload/" + smImage);
+    }
+
+    //장바구니
+    const cart = () => {
+        console.log("장바구니 호출")
+        console.log([[${item}]])
+        const id = document.getElementById("itemId").value;
+        const cartCount = document.getElementById("itemCountInput").value;
+        const itemName = document.getElementById("itemName").textContent;
+        const loginCheck = document.getElementsByName("loginCheck")[0].value;
+        if (loginCheck == 'loginOk') {
+            $.ajax({
+                type: "get",
+                url: "/cart/saved",
+                data: {
+                    id: id,
+                    itemName: itemName,
+                    cartCount: cartCount
+                },
+                dataType: "text",
+                success: function (userId) {
+                    console.log(userId);
+                    if (confirm("장바구니에 담겼습니다.  장바구니로 이동하시겠습니까?") == true) {
+                        location.href = "/cart/list?userId=" + userId;
+                    } else {
+                    }
+                },
+                error: function () {
+                    console.log("실패");
+                }
+            });
+        } else {
+            location.href = "/login";
+        }
+    }
+
+
+    //바로구매
+    const orderItem = () => {
+        console.log("orderItem 호출");
+        const loc = document.getElementById("loc");
+        loc.action = "/order/save";
+        const form = document.querySelector('form');
+        form.submit();
+    }
+    //구매수량
+    const total = (itemCount) => {
+        console.log("수량")
+        const orderCount2 = document.getElementById('itemCountInput').value;
+        const itemPrice2 = [[${item.itemPrice}]];
+        let orderCount = orderCount2;
+        let itemPrice = itemPrice2;
+        let totalPrice = orderCount * itemPrice;
+        let result = totalPrice.toLocaleString();
+        console.log(itemCount)
+        console.log(orderCount)
+        if (itemCount < orderCount) {
+            alert("구매수량을 초과하였습니다.")
+            let totalPrice = itemPrice * 1;
+            document.getElementById('itemCountInput').value = 1;
+            document.getElementById("totalPrice").innerHTML = result + "원";
+            // document.getElementById("totalPrice").innerHTML = totalPrice + "원";
+        } else {
+            console.log(totalPrice);
+            document.getElementById("totalPrice").innerHTML = result + "원";
+            // document.getElementById("totalPrice").innerHTML = totalPrice + "원";
+        }
+    }
+
+    //최근본상품을 페이지호출시 저장
+    window.onload = function () {
+        console.log("최근본상품 호출");
+        const itemId = document.getElementById("itemId").value;
+        const itemImage = document.getElementById("itemImage").value;
+        const itemName = document.getElementById("itemName").textContent;
+        const item = {
+            itemId: itemId,
+            itemImage: itemImage,
+            itemName: itemName,
+            timestamp: Date.now()
+        }
+        console.log(item);
+        let recentItems = JSON.parse(localStorage.getItem("recentItems")) || [];
+        if (recentItems.find(i => i.itemId === itemId)) return;
+        recentItems.unshift(item);
+        recentItems = recentItems.slice(0, 3);
+        localStorage.setItem("recentItems", JSON.stringify(recentItems));
+        console.log(localStorage.getItem("recentItems"));
+    }
+
+
+</script>
+
+</html>
