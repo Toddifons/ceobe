@@ -100,7 +100,6 @@ public class PasswordChangeMailServiceImpl implements MailService {
 
         ePw = createKey(); // 랜덤 인증번호 생성
 
-        // TODO Auto-generated method stub
         MimeMessage message = createMessage(to); // 메일 발송
         try {// 예외처리
             emailsender.send(message);
