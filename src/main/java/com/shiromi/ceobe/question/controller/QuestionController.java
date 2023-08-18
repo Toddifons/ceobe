@@ -1,5 +1,6 @@
 package com.shiromi.ceobe.question.controller;
 
+import com.shiromi.ceobe.reply.dto.ReplyDTO;
 import com.shiromi.ceobe.question.dto.QuestionDTO;
 import com.shiromi.ceobe.question.service.QuestionService;
 import lombok.RequiredArgsConstructor;
