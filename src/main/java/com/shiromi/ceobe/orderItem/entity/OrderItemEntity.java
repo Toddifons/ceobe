@@ -3,10 +3,16 @@ package com.shiromi.ceobe.orderItem.entity;
 import com.shiromi.ceobe.common.entity.BaseEntity;
 import com.shiromi.ceobe.item.entity.ItemEntity;
 import com.shiromi.ceobe.order.entity.OrderEntity;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
+@Setter
+@Getter
 @Entity
+@NoArgsConstructor
 @Table(name = "order_item")
 public class OrderItemEntity extends BaseEntity {
     @Id
