@@ -8,10 +8,10 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
-@Entity
-@Table(name = "cart_item_table")
 @Setter
 @Getter
+@Entity
+@Table(name = "cart_item_table")
 public class CartItemEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

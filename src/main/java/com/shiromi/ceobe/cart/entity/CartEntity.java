@@ -11,9 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "cart_table")
-@Setter
 @Getter
+@Setter
+@Table(name = "item_table")
 public class CartEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
