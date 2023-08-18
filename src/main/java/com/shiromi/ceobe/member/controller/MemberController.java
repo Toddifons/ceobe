@@ -17,8 +17,7 @@ import javax.servlet.http.HttpSession;
 @RequestMapping("/member")
 public class MemberController {
     private final MemberService memberService;
-//    private final RegisterMail registerMail;
-//    private final RegisterPassword registerPassword;
+
 
 
     //회원가입 화면
