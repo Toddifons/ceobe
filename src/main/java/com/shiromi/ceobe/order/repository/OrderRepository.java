@@ -11,5 +11,7 @@ public interface OrderRepository extends JpaRepository<OrderEntity,Long> {
 
 
     List<OrderEntity> findByMemberEntity(MemberEntity memberEntity, Sort id);
+
+    void deleteByMemberEntity(MemberEntity memberEntity2);
 }
 
