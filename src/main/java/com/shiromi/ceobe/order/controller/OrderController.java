@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Slf4j
 @Controller
@@ -30,10 +31,10 @@ public class OrderController {
     //주문하기
     @PostMapping("/order/save")
     public String save(@ModelAttribute OrderDTO orderDTO, Model model) {
-        System.out.println("시작orderDTO = " + orderDTO + ", model = " + model);
+        log.info("Before : orderDTO = {}, model = {} ",orderDTO, model);
         orderService.save(orderDTO);
         model.addAttribute("order", orderDTO);
-        System.out.println("저장후orderDTO = " + orderDTO + ", model = " + model);
+        log.info("after : orderDTO = {}, model = {} ",orderDTO, model;
         return "redirect:/";
     }
     @PostMapping("/order/save2")
@@ -46,5 +47,15 @@ public class OrderController {
         System.out.println("itemDTOList2 = " + itemDTOList + ", model = " + model);
         orderService.save2(itemDTOList,userId);
         return "success";
+    }
+    //장바구니에서 주문하기
+    @GetMapping("/order/cart3")
+    public String save3(@RequestParam("userId")String userId,Model model){
+        List<CartItemDTO> cartItemDTOList=orderService.findByOrderReady(userId);
+        int itemPriceTotal=cartItemDTOList.get(0).getItemPriceTotal();
+        model.addAttribute("cartList",cartItemDTOList);
+        model.addAttribute("itemPriceTotal",itemPriceTotal);
+
+        return "orderPages/orderSave2";
     }
 }
