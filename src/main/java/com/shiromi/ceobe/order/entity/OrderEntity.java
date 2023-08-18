@@ -5,6 +5,7 @@ import com.shiromi.ceobe.member.entity.MemberEntity;
 import com.shiromi.ceobe.orderItem.entity.OrderItemEntity;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -15,6 +16,7 @@ import java.util.List;
 @Getter
 @Entity
 @Table(name = "order")
+@NoArgsConstructor
 public class OrderEntity extends BaseEntity {
 
     @Id
