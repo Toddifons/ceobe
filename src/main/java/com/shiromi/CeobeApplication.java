@@ -1,4 +1,4 @@
-package com.shiromi.ceobe;
+package com.shiromi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
