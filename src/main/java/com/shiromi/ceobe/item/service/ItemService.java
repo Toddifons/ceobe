@@ -93,4 +93,17 @@ public class ItemService {
             return savedId;
         }
     }
+    public void delete(Long id) {
+        itemRepository.deleteById(id);
+    }
+
+    @Transactional
+    public ItemDTO findByOrderName(String orderName) {
+        Optional<ItemEntity> itemEntityOptional = itemRepository.findByItemName(orderName);
+        if (itemEntityOptional.isPresent()) {
+            return ItemDTO.toItemDTO(itemEntityOptional.get());
+        } else {
+            return null;
+        }
+    }
 }
