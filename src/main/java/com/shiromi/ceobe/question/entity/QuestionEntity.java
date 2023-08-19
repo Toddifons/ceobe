@@ -42,7 +42,6 @@ public class QuestionEntity extends BaseEntity {
     @JoinColumn(name = "member_id")
     private MemberEntity memberEntity;
 
-    //== ReplyEntity가 없어서 우선 주석 처리 ==//
     //    question(질문) : reply(답변) = 1 : M
     @OneToMany(mappedBy = "questionEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<ReplyEntity> replyEntityList = new ArrayList<>();

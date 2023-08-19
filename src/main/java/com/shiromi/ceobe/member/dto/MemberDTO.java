@@ -1,6 +1,7 @@
 package com.shiromi.ceobe.member.dto;
 
 import com.shiromi.ceobe.member.entity.MemberEntity;
+import com.shiromi.config.auth.RoleType;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -20,6 +21,7 @@ public class MemberDTO {
     private String detailAddress;
     private String extraAddress;
     private String postcode;
+    private RoleType role;
     private LocalDateTime memberCreatedTime;
     private LocalDateTime memberUpdatedTime;
 
@@ -36,7 +38,7 @@ public class MemberDTO {
         this.memberCreatedTime = memberCreatedTime;
     }
     @Builder
-    public MemberDTO(Long id, String userId, String memberPassword, String memberEmail, String memberName, String memberMobile, String memberAddress, String detailAddress, String extraAddress, String postcode, LocalDateTime memberCreatedTime, LocalDateTime memberUpdatedTime, String accessToken, String url) {
+    public MemberDTO(Long id, String userId, String memberPassword, String memberEmail, String memberName, String memberMobile, String memberAddress, String detailAddress, String extraAddress, String postcode, LocalDateTime memberCreatedTime, LocalDateTime memberUpdatedTime, RoleType role, String accessToken, String url) {
         this.id = id;
         this.userId = userId;
         this.memberPassword = memberPassword;
@@ -47,6 +49,7 @@ public class MemberDTO {
         this.detailAddress = detailAddress;
         this.extraAddress = extraAddress;
         this.postcode = postcode;
+        this.role = role;
         this.memberCreatedTime = memberCreatedTime;
         this.memberUpdatedTime = memberUpdatedTime;
         this.accessToken = accessToken;
