@@ -14,11 +14,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class MemberService {
     private final MemberRepository memberRepository;
     private final CartRepository cartRepository;
@@ -27,8 +29,10 @@ public class MemberService {
     public Long signup(MemberDTO memberDTO) {
        MemberEntity saveMember = MemberEntity.toSaveEntity(memberDTO);
        saveMember.setRole(RoleType.USER);
+
        MemberEntity findMember = memberRepository.findById(saveMember.getId())
                .orElseThrow(() -> new IllegalArgumentException("Member Not Found"));
+
        if (findMember != null){
            log.info("이미 회원입니다.");
        } else {

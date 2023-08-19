@@ -34,7 +34,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         OAuth2UserInfo oauth2UserInfo = oauth2UserInfoCreate(loginProvider, oauth2User);
 
         String provider = oauth2UserInfo.getProvider();
-        String providerId = oauth2UserInfo.getProviderID().substring(0,19);
+        String providerId = oauth2UserInfo.getProviderID().substring(0,10);
         String memberName = provider;
         //OAuth 로그인은 비밀번호를 저장하지 않음
         String password = encoderPwd.encode("Oauth2 Loging User");

@@ -64,7 +64,7 @@
         </ul>
     </div>
 
-    <input type="hidden" id="cartList" th:value="${cartList.size()}">
+    <input type="hidden" id="cartList" th:if="${cartList}" th:value="${cartList.size()}">
 
     <div class="cart_table">
         <div class="cart_total_area">
