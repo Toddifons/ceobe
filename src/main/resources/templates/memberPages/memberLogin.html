@@ -69,7 +69,7 @@
 
         $.ajax({
             type: "post",
-            url: "/member/login",
+            url: "/member/memberLogin",
             data: {
                 UserId: email,
                 memberPassword: pw
@@ -78,7 +78,7 @@
             success: function (result) {
                 if (result == "ok") {
                     // alert("로그인성공")
-                    location.href = "/member/login2?redirectURL=" + url;
+                    location.href = "/"
                     // window.location.replace('url');
                 } else {
                     alert("아이디 또는 비밀번호를 다시 확인해주세요")

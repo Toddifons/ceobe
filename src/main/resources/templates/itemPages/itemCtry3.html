@@ -43,10 +43,9 @@
   </div>
 </nav>
 
-<div class="container" id="productSaveForm">
-  <div th:if="${!session.isEmpty()} and ${session.member.userId} == 'admin' ">
-    <a href="/item/save">상품등록</a>
-  </div>
+<!-- 상품등록 링크 -->
+<div class="container" id="productSaveForm" th:if="${session.member != null and session.member.role == 'admin'}">
+  <a href="/item/save">상품등록</a>
 </div>
 
 <div class="container">
@@ -79,7 +78,8 @@
                       <p th:text="${#numbers.formatInteger(item.itemPrice,0,'COMMA')}+'원'"></p>
                     </div>
                   </div>
-                  <div th:if="${!session.isEmpty()} and ${session.member.userId} == 'admin' ">
+                  <!-- 상품 수정 및 삭제 버튼 -->
+                  <div th:if="${session.member != null and session.member.role == 'admin'}">
                     <button th:onclick="updateReq([[${item}]])" class="btn btn-outline-secondary btn-sm">상품 수정</button>
                     <button th:onclick="deleteReq([[${item}]])" class="btn btn-outline-secondary btn-sm">상품 삭제</button>
                   </div>

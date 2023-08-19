@@ -3,11 +3,8 @@ package com.shiromi.config;
 
 import com.shiromi.config.oauth.PrincipalOauth2UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -27,6 +24,10 @@ public class SecurityConfig {
                 .httpBasic(httpBasic -> httpBasic.disable())
                 .authorizeHttpRequests(authorize -> authorize
                         .antMatchers("/", "/member/**", "/img/**","/css/**","/js/**","/jsp/**", "/style/**").permitAll()
+                        .antMatchers("/cart/list", "/item/main","/item/category1", "/item/category2", "/item/category3",
+                                "/member/save", "/member/duplicate-check-userId", "/member/login",
+                                "/member/auth/login", "/member/logout", "/member/logout2", "/member/mailConfirm",
+                                "/member/searchPassword", "/member/searchPasswordUpdate").permitAll()
 
                         //== USER & ADMIN ==//
                         .antMatchers("/cart/saved",
@@ -37,7 +38,6 @@ public class SecurityConfig {
                                 "/comment/update",
                                 "/comment/delete",
                                 "/item/save",
-                                "/item/main",
                                 "/item/update",
                                 "/item/delete",
                                 "/items",
@@ -60,7 +60,6 @@ public class SecurityConfig {
                                 "/member/{id}",
                                 "/member/password",
                                 "/member/update",
-                                "/member/mailConfirm",
                                 "/member/searchPassword",
                                 "/member/searchPasswordUpdate",
                                 "/order/listAll",

@@ -29,25 +29,7 @@ public class MemberService {
     public Long signup(MemberDTO memberDTO) {
        MemberEntity saveMember = MemberEntity.toSaveEntity(memberDTO);
        saveMember.setRole(RoleType.USER);
-
-       MemberEntity findMember = memberRepository.findById(saveMember.getId())
-               .orElseThrow(() -> new IllegalArgumentException("Member Not Found"));
-
-       if (findMember != null){
-           log.info("이미 회원입니다.");
-       } else {
-           memberRepository.save(saveMember);
-       }
-
-//        Long savedId = memberRepository.save(MemberEntity.toSaveEntity(memberDTO)).getId();
-//        Optional<MemberEntity> memberEntity = memberRepository.findById(savedId);
-//        if (memberEntity.isPresent()) {
-//            MemberEntity memberEntity1 = memberEntity.get();
-//            CartEntity cartEntity = new CartEntity();
-//            cartEntity.setMemberEntity(memberEntity1);
-//            cartRepository.save(cartEntity);
-//        }
-
+       memberRepository.save(saveMember);
         return saveMember.getId();
     }
 
@@ -112,9 +94,10 @@ public class MemberService {
         }
     }
 
+    @Transactional
     public void update(MemberDTO memberDTO) {
-        MemberEntity updateEntity = MemberEntity.toUpdateEntity(memberDTO);
-        memberRepository.save(updateEntity);
+        MemberEntity memberEntity = memberRepository.findByUserId(memberDTO.getUserId()).orElseThrow();
+        memberEntity.setMemberPassword(memberDTO.getMemberPassword());
     }
 
     public MemberDTO saveKakao(MemberDTO memberDTO) {
