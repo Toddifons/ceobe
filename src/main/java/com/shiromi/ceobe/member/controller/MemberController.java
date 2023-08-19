@@ -1,7 +1,5 @@
 package com.shiromi.ceobe.member.controller;
 
-import com.shiromi.common.service.PasswordChangeMailServiceImpl;
-import com.shiromi.common.service.RegisterMailServiceImpl;
 import com.shiromi.ceobe.member.dto.MemberDTO;
 import com.shiromi.ceobe.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +17,9 @@ import javax.servlet.http.HttpSession;
 @RequestMapping("/member")
 public class MemberController {
     private final MemberService memberService;
-    private final RegisterMailServiceImpl registerMail;
-    private final PasswordChangeMailServiceImpl passwordChangeMail;
+//    private final RegisterMail registerMail;
+//    private final RegisterPassword registerPassword;
+
 
     //회원가입 화면
     @GetMapping("/save")
@@ -59,6 +58,13 @@ public class MemberController {
         model.addAttribute("redirectURL", redirectURL);
         return "redirect:" + redirectURL;
     }
+
+//    //로그인 화면
+//    @GetMapping("/login")
+//    public String loginForm() {
+//        return "/memberPages/memberLogin";
+//    }
+
 
     //로그인 처리
     @PostMapping("/login")
@@ -197,7 +203,7 @@ public class MemberController {
         if (checkResultPassword.equals("success")) {
             System.out.println("email = " + email);
             //임시 비밀번호 전송
-            String code = passwordChangeMail.sendSimpleMessage(email);
+            String code = registerPassword.sendSimpleMessage(email);
             System.out.println("인증코드 : " + code);
             return code;
         }else{
@@ -209,7 +215,7 @@ public class MemberController {
     @PostMapping("/searchPasswordUpdate")
     public @ResponseBody void searchPasswordUpdate(@RequestParam("email")String memberEmail) throws Exception{
         System.out.println("넘어옴");
-        String code = passwordChangeMail.sendSimpleMessage(memberEmail);
+        String code = registerPassword.sendSimpleMessage(memberEmail);
         System.out.println("서비스전까지");
         memberService.passwordUpdate(memberEmail , code);
     }
