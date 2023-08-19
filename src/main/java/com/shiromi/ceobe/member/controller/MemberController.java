@@ -1,5 +1,6 @@
 package com.shiromi.ceobe.member.controller;
 
+import com.shiromi.ceobe.member.entity.MemberEntity;
 import com.shiromi.common.service.PasswordChangeMailServiceImpl;
 import com.shiromi.common.service.RegisterMailServiceImpl;
 import com.shiromi.ceobe.member.dto.MemberDTO;
@@ -49,7 +50,7 @@ public class MemberController {
     }
 
     //로그인 처리
-    @PostMapping("/login")
+    @PostMapping("/memberLogin")
     public @ResponseBody String login(@ModelAttribute MemberDTO memberDTO, HttpSession session/*, @RequestParam(value = "redirectURL", defaultValue = "/") String redirectURL*/) {
         MemberDTO result = memberService.memberLogin(memberDTO);
         if (result != null) {
@@ -104,17 +105,17 @@ public class MemberController {
     //정보수정 클릭 시 비밀번호 확인 화면
     @GetMapping("/password")
     public String passwordCheck(Model model, HttpSession session) {
-        String userId = (String) session.getAttribute("userId");
-        MemberDTO memberDTO = memberService.findByUserId(userId);
-        model.addAttribute("member", memberDTO);
+        MemberDTO memberDTO = (MemberDTO) session.getAttribute("member");
+        MemberDTO findMemberDTO = memberService.findByUserId(memberDTO.getUserId());
+        model.addAttribute("member", findMemberDTO);
         return "memberPages/memberPasswordCheck";
     }
 
     //회원 정보 수정 화면
     @GetMapping("/update")
     public String updateForm(Model model, HttpSession session) {
-        String userId = (String) session.getAttribute("userId");
-        MemberDTO memberDTO = memberService.findByUserId(userId);
+        MemberDTO requestMemberDTO = (MemberDTO) session.getAttribute("member");
+        MemberDTO memberDTO = memberService.findByUserId(requestMemberDTO.getUserId());
         model.addAttribute("member", memberDTO);
         return "memberPages/memberUpdate";
     }
@@ -122,7 +123,6 @@ public class MemberController {
     //회원 정보 수정
     @PostMapping("/update")
     public String update(@ModelAttribute MemberDTO memberDTO,HttpSession session) {
-//        String memberPassword = memberDTO.getMemberPasswordUpdate();
         String memberPassword = memberDTO.getMemberPassword();
         memberDTO.setMemberPassword(memberPassword);
         memberService.update(memberDTO);

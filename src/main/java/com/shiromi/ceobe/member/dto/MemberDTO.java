@@ -81,6 +81,7 @@ public class MemberDTO {
         memberDTO.setPostcode(memberEntity.getPostcode());
         memberDTO.setMemberCreatedTime(memberEntity.getCreatedTime());
         memberDTO.setMemberUpdatedTime(memberEntity.getUpdatedTime());
+        memberDTO.setRole(memberEntity.getRole());
         return memberDTO;
     }
 }
