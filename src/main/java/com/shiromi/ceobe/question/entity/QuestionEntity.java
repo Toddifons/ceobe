@@ -42,14 +42,14 @@ public class QuestionEntity extends BaseEntity {
 //    @OneToMany(mappedBy = "questionEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
 //    private List<ReplyEntity> replyEntityList = new ArrayList<>();
 
-    public static QuestionEntity toSaveEntity(QuestionDTO questionDTO , MemberEntity memberEntity){
-        QuestionEntity questionEntity = new QuestionEntity();
-        questionEntity.setQuestionName(questionDTO.getQuestionName());
-        questionEntity.setQuestionTitle(questionDTO.getQuestionTitle());
-        questionEntity.setQuestionContents(questionDTO.getQuestionContents());
-        questionEntity.setQuestionStatus(questionDTO.getQuestionStatus());
-        questionEntity.setMemberEntity(memberEntity);
-        return questionEntity;
-    }
+//    public static QuestionEntity toSaveEntity(QuestionDTO questionDTO , MemberEntity memberEntity){
+////        QuestionEntity questionEntity = new QuestionEntity();
+////        questionEntity.setQuestionName(questionDTO.getQuestionName());
+////        questionEntity.setQuestionTitle(questionDTO.getQuestionTitle());
+////        questionEntity.setQuestionContents(questionDTO.getQuestionContents());
+////        questionEntity.setQuestionStatus(questionDTO.getQuestionStatus());
+////        questionEntity.setMemberEntity(memberEntity);
+////        return questionEntity;
+//    }
 
 }

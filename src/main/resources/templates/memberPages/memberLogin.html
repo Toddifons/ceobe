@@ -32,12 +32,10 @@
             </fieldset>
         </div>
 
-        <section>
-            <a id="kakao-login-btn" role="button" class="btn">
-                <img src="//k.kakaocdn.net/14/dn/btqbjxsO6vP/KPiGpdnsubSq3a0PHEGUK1/o.jpg" width="200px" height="40px"
-                     style="width: 420px;"/>
-            </a>
-        </section>
+        <a href="/oauth2/authorization/google"><img height="43px" src="/img/btn_google_login.png"></a>
+        <a href="/oauth2/authorization/kakao"><img height="43px" src="/img/btn_kakao_login.png"></a>
+        <a href="/oauth2/authorization/facebook"><img height="43px" src="/img/btn_facebook_login.png"></a>
+        <a href="/oauth2/authorization/naver"><img height="43px" src="/img/btn_naver_login.png"></a>
         <div>
             <p class="mt-5">회원이 아니신가요? <a href="/member/signup" class="btn-dark" style="font-weight: bold;">가입하기</a></p>
             <p class="mt-5">비밀번호를 잊으셨나요? <a href="/member/searchPassword" class="btn-dark" style="font-weight: bold;">비밀번호 찾기</a></p>
@@ -153,9 +151,6 @@
         obj5.setAttribute('name', 'url');
         obj5.setAttribute('value', url);
 
-
-
-
         f.append(obj);
         f.append(obj2);
         f.append(obj3);
@@ -166,7 +161,5 @@
         document.body.append(f);
         f.submit();
     }
-
-
 </script>
 </html>

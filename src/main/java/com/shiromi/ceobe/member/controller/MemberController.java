@@ -22,7 +22,7 @@ public class MemberController {
     private final RegisterMailServiceImpl registerMail;
     private final PasswordChangeMailServiceImpl passwordChangeMail;
 
-    //회원가입 화면
+    // 일반 회원가입 화면
     @GetMapping("/signup")
     public String saveForm() {
         return "/memberPages/memberSave";
@@ -31,47 +31,42 @@ public class MemberController {
     //userId 중복체크
     @PostMapping("/checkUserId")
     public @ResponseBody String userIdDuplicateCheck(@RequestParam("userId") String userId) {
-        String checkResult = memberService.userIdDuplicateCheck(userId);
-        if (checkResult.equals("success")) {
-            return "success";
-        } else {
-            return "fail";
-        }
+        return memberService.userIdDuplicateCheck(userId);
     }
 
-    //회원가입 처리
+    // 일반 회원가입 처리
     @PostMapping("/signup")
-    public String save(@ModelAttribute MemberDTO memberDTO) {
-        memberService.save(memberDTO);
+    public String signup(@ModelAttribute MemberDTO memberDTO) {
+        memberService.signup(memberDTO);
         return "redirect:/";
     }
 
     //일반 로그인 화면
     @GetMapping("/login")
-    public String loginForm(@RequestParam(value = "redirectURL", defaultValue = "/") String redirectURL, Model model) {
-        model.addAttribute("redirectURL", redirectURL);
+    public String loginForm(/*@RequestParam(value = "redirectURL", defaultValue = "/") String redirectURL, Model model*/) {
+        //model.addAttribute("redirectURL", redirectURL);
         return "memberPages/memberLogin";
-    }
-
-    //인터셉터
-    @GetMapping("/login2")
-    public String login2(@RequestParam(value = "redirectURL", defaultValue = "/") String redirectURL, Model model) {
-        model.addAttribute("redirectURL", redirectURL);
-        return "redirect:" + redirectURL;
     }
 
     //로그인 처리
     @PostMapping("/login")
-    public @ResponseBody String login(@ModelAttribute MemberDTO memberDTO, HttpSession session, @RequestParam(value = "redirectURL", defaultValue = "/") String redirectURL) {
+    public @ResponseBody String login(@ModelAttribute MemberDTO memberDTO/*, HttpSession session, @RequestParam(value = "redirectURL", defaultValue = "/") String redirectURL*/) {
         MemberDTO result = memberService.memberLogin(memberDTO);
         if (result != null) {
-            session.setAttribute("member", result);
-            System.out.println("redirect:" + redirectURL);
+            //session.setAttribute("member", result);
+            //System.out.println("redirect:" + redirectURL);
             return "ok";
         } else {
             return "no";
         }
     }
+
+//    //인터셉터
+//    @GetMapping("/login2")
+//    public String login2(@RequestParam(value = "redirectURL", defaultValue = "/") String redirectURL, Model model) {
+//        model.addAttribute("redirectURL", redirectURL);
+//        return "redirect:" + redirectURL;
+//    }
 
     //관리자 페이지
     @GetMapping("/admin")
@@ -135,20 +130,18 @@ public class MemberController {
         return "index";
     }
 
-    //카카오 로그인
-    @PostMapping("/kakao")
-    public String Home(@ModelAttribute MemberDTO memberDTO, HttpSession session , Model model) {
-        System.out.println("memberDTO = " + memberDTO + ", session = " + session);
-        MemberDTO member = memberService.saveKakao(memberDTO);
-        member.setAccessToken(memberDTO.getAccessToken());
-        session.setAttribute("member", member);
-        session.setAttribute("access_token", memberDTO.getAccessToken());
-        String redirectURL = memberDTO.getUrl();
-        model.addAttribute("redirectURL", redirectURL);
-        return "redirect:" + redirectURL;
-    }
-
-
+//    //카카오 로그인
+//    @PostMapping("/kakao")
+//    public String Home(@ModelAttribute MemberDTO memberDTO, HttpSession session , Model model) {
+//        System.out.println("memberDTO = " + memberDTO + ", session = " + session);
+//        MemberDTO member = memberService.saveKakao(memberDTO);
+//        member.setAccessToken(memberDTO.getAccessToken());
+//        session.setAttribute("member", member);
+//        session.setAttribute("access_token", memberDTO.getAccessToken());
+//        String redirectURL = memberDTO.getUrl();
+//        model.addAttribute("redirectURL", redirectURL);
+//        return "redirect:" + redirectURL;
+//    }
 
 
 
