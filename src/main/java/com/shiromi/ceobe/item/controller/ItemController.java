@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.Map;
 
 @Slf4j
 @Controller
@@ -38,23 +39,8 @@ public class ItemController {
                           @RequestParam(required = false , value = "sort", defaultValue = "id") String sort,
                           @RequestParam(required = false , value = "search", defaultValue = "") String search,
                           @RequestParam(required = false , value = "category", defaultValue = "") String category){
-        Page<ItemDTO> itemDTOList = itemService.findAll(pageable, sort, search , category);
-
-        if(itemDTOList.getTotalElements() == 0){
-            model.addAttribute("message","null");
-        }
-        model.addAttribute("itemList",itemDTOList);
-        int blockLimit = 3;
-        int startPage = (((int)(Math.ceil((double)pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1;
-        int endPage = ((startPage + blockLimit - 1) < itemDTOList.getTotalPages()) ? startPage + blockLimit - 1 : itemDTOList.getTotalPages();
-        model.addAttribute("startPage", startPage);
-        model.addAttribute("endPage", endPage);
-        //sort: 정렬 관련 정보
-        model.addAttribute("sort", sort);
-        model.addAttribute("size", pageable.getPageSize());
-        model.addAttribute("page", pageable.getPageNumber());
-        model.addAttribute("search", search);
-        model.addAttribute("category", category);
+        Map<String, Object> map = itemService.findAll(pageable, sort, search , category);
+        model.addAllAttributes(map);
         return "itemPages/itemMain";
     }
 
@@ -105,8 +91,9 @@ public class ItemController {
     //리팩토링 1순위
     //카테고리별로 띄우기
     @GetMapping("/item/category1")
-    public String findSmall(@PageableDefault(page = 1,size = 5)Pageable pageable, Model model , @RequestParam(required = false , value = "sort", defaultValue = "id") String sort
-            , @RequestParam(required = false , value = "search", defaultValue = "") String search,
+    public String findSmall(@PageableDefault(page = 1,size = 5)Pageable pageable, Model model ,
+                            @RequestParam(required = false , value = "sort", defaultValue = "id") String sort,
+                            @RequestParam(required = false , value = "search", defaultValue = "") String search,
                             @RequestParam(required = false , value = "category", defaultValue = "") String category){
         Page<ItemDTO> itemDTOList = itemService.findSmall(pageable, sort, search , category);
         if(itemDTOList.getTotalElements() == 0){
@@ -127,8 +114,9 @@ public class ItemController {
     }
 
     @GetMapping("/item/category2")
-    public String findMedium(@PageableDefault(page = 1,size = 5)Pageable pageable, Model model , @RequestParam(required = false , value = "sort", defaultValue = "id") String sort
-            , @RequestParam(required = false , value = "search", defaultValue = "") String search,
+    public String findMedium(@PageableDefault(page = 1,size = 5)Pageable pageable, Model model ,
+                             @RequestParam(required = false , value = "sort", defaultValue = "id") String sort,
+                             @RequestParam(required = false , value = "search", defaultValue = "") String search,
                              @RequestParam(required = false , value = "category", defaultValue = "") String category) {
         System.out.println("pageable = " + pageable + ", model = " + model + ", sort = " + sort + ", search = " + search + ", category = " + category);
         Page<ItemDTO> itemDTOList = itemService.findMedium(pageable, sort, search, category);
@@ -150,17 +138,19 @@ public class ItemController {
     }
 
     @GetMapping("/item/category3")
-    public String findLarge(@PageableDefault(page = 1,size = 5)Pageable pageable, Model model , @RequestParam(required = false , value = "sort", defaultValue = "id") String sort
-            , @RequestParam(required = false , value = "search", defaultValue = "") String search,
+    public String findLarge(@PageableDefault(page = 1,size = 5)Pageable pageable, Model model ,
+                            @RequestParam(required = false , value = "sort", defaultValue = "id") String sort,
+                            @RequestParam(required = false , value = "search", defaultValue = "") String search,
                             @RequestParam(required = false , value = "category", defaultValue = "") String category){
         Page<ItemDTO> itemDTOList = itemService.findLarge(pageable, sort, search , category);
         if(itemDTOList.getTotalElements() == 0){
             model.addAttribute("message","null");
         }
         model.addAttribute("itemList",itemDTOList);
+
         int blockLimit = 3;
         int startPage = (((int)(Math.ceil((double)pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1;
-        int endPage = ((startPage + blockLimit - 1) < itemDTOList.getTotalPages()) ? startPage + blockLimit - 1 : itemDTOList.getTotalPages();
+        int endPage = Math.min((startPage + blockLimit - 1), itemDTOList.getTotalPages());
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
         model.addAttribute("sort", sort);
@@ -168,6 +158,7 @@ public class ItemController {
         model.addAttribute("page", pageable.getPageNumber());
         model.addAttribute("search", search);
         model.addAttribute("category", category);
+
         return "itemPages/itemCtry3";
     }
 }
