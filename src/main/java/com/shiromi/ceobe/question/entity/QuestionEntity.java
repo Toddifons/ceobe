@@ -21,7 +21,7 @@ public class QuestionEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long questionId;
+    private Long id;
 
     @Column(length = 20)
     private String questionName;

@@ -16,7 +16,7 @@ public class ReplyEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long questionAnswerId;
+    private Long id;
 
     @Column(length = 20, nullable = false)
     private String replyName;
