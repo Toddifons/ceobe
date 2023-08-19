@@ -3,6 +3,7 @@ package com.shiromi.config;
 
 import com.shiromi.config.oauth.PrincipalOauth2UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,23 +31,69 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.csrf(csrf -> csrf.disable())
                 .httpBasic(httpBasic -> httpBasic.disable())
+                .authorizeHttpRequests(authorize -> authorize
+                        //== USER & ADMIN ==//
+                        .antMatchers("/cart/saved",
+                                "/cart/{id}",
+                                "/cart/delete",
+                                "/cart/change",
+                                "/comment/save",
+                                "/comment/update",
+                                "/comment/delete",
+                                "/item/save",
+                                "/item/main",
+                                "/item/update",
+                                "/item/delete",
+                                "/items",
+                                "/item/",
+                                "/member/password",
+                                "/member/update",
+                                "/order/save",
+                                "/order/save2",
+                                "/order/cart3",
+                                "/order/cart2",
+                                "/order/list",
+                                "/question/list",
+                                "/reply/save",
+                                "/reply/delete"
+                        ).hasAnyRole("USER", "ADMIN")
 
-                //인증 권한 설정. 현재 아래 경로 외에 권한이 필요하다고만 되어 있음.
-                .authorizeHttpRequests(authroize -> authroize
+                        //== Only ADMIN ==//
+                        .antMatchers("/member/admin",
+                                "/member/list",
+                                "/member/{id}",
+                                "/member/password",
+                                "/member/update",
+                                "/member/mailConfirm",
+                                "/member/searchPassword",
+                                "/member/searchPasswordUpdate",
+                                "/order/listAll",
+                                "/order/status",
+                                "/order/cancel",
+                                "/question/save",
+                                "/question",
+                                "/question/update/{id}",
+                                "/question/update",
+                                "/question/delete/{id}"
+
+                        ).hasRole("ADMIN")
+
+                        /* //== ALL ==//
+                        .antMatchers("/cart/list", "/item/category1", "/item/category2", "/item/category3",
+                                "/member/save", "/member/duplicate-check-userId", "/member/login",
+                                "/member/auth/login", "/member/logout", "/member/logout2", "/member/mailConfirm",
+                                "/member/searchPassword", "/member/searchPasswordUpdate").permitAll()*/
                         .anyRequest().permitAll())
-//                        .antMatchers("/", "/auth/**", "/js/**", "/css/**", "/image/**").permitAll()
-//                        .anyRequest()
-//                        .authenticated())
 
-                //기본 로그인 설정
-                .formLogin(fromLogin -> fromLogin.loginPage("/auth/loginForm")
+                .formLogin(formLogin -> formLogin.loginPage("/auth/loginForm")
                         .loginProcessingUrl("/auth/login")
                         .defaultSuccessUrl("/"))
 
-                //Oauth2 로그인 설정
                 .oauth2Login(oauth2Login -> oauth2Login.loginPage("/auth/loginForm")
                         .userInfoEndpoint()
                         .userService(principalOauth2UserService))
                 .build();
     }
+
+
 }

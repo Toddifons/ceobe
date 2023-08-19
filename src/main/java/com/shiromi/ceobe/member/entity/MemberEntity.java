@@ -1,11 +1,11 @@
 package com.shiromi.ceobe.member.entity;
 
 import com.shiromi.ceobe.cart.entity.CartEntity;
+import com.shiromi.ceobe.reply.entity.ReplyEntity;
 import com.shiromi.common.entity.BaseEntity;
 import com.shiromi.ceobe.member.dto.MemberDTO;
 import com.shiromi.ceobe.order.entity.OrderEntity;
 import com.shiromi.ceobe.question.entity.QuestionEntity;
-import com.shiromi.ceobe.question.entity.ReplyEntity;
 import com.shiromi.config.auth.RoleType;
 import lombok.Builder;
 import lombok.Getter;

@@ -23,7 +23,7 @@ public class MemberController {
     private final PasswordChangeMailServiceImpl passwordChangeMail;
 
     //회원가입 화면
-    @GetMapping("/save")
+    @GetMapping("/signup")
     public String saveForm() {
         return "/memberPages/memberSave";
     }
@@ -40,7 +40,7 @@ public class MemberController {
     }
 
     //회원가입 처리
-    @PostMapping("/save")
+    @PostMapping("/signup")
     public String save(@ModelAttribute MemberDTO memberDTO) {
         memberService.save(memberDTO);
         return "redirect:/";
