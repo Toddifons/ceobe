@@ -1,6 +1,7 @@
 package com.shiromi.common.controller;
 
 import com.nimbusds.jose.proc.SecurityContext;
+import com.shiromi.ceobe.member.dto.MemberDTO;
 import com.shiromi.ceobe.member.entity.MemberEntity;
 import com.shiromi.config.auth.PrincipalDetails;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -18,8 +19,9 @@ public class IndexController {
     public String index(@AuthenticationPrincipal PrincipalDetails principalDetails, HttpSession session) {
         try {
             MemberEntity memberEntity = principalDetails.getMemberEntity();
+            MemberDTO memberDTO = MemberDTO.toDTO(memberEntity);
             if (memberEntity != null){
-                session.setAttribute("member", memberEntity);
+                session.setAttribute("member", memberDTO);
             }
         } catch (Exception e){
             e.getMessage();
