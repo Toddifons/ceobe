@@ -72,12 +72,9 @@ public class ItemService {
     //이름으로 검색
     @Transactional
     public ItemDTO findById(Long id) {
-        Optional<ItemEntity> itemEntityOptional = itemRepository.findById(id);
-        if (itemEntityOptional.isPresent()) {
-            return ItemDTO.toItemDTO(itemEntityOptional.get());
-        } else {
-            return null;
-        }
+        return itemRepository.findById(id)
+                .orElseThrow(IllegalAccessError::new)
+                .toItemDTO();
     }
     //업데이트
     @Transactional
