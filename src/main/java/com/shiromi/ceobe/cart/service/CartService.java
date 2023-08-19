@@ -35,41 +35,41 @@ public class CartService {
     private final ItemRepository itemRepository;
 
     @Transactional
-    public void save(ItemDTO itemDTO) {
-        MemberEntity memberEntity = memberRepository.findByUserId(itemDTO.getUserId()).get();
+    public String save(ItemDTO itemDTO, MemberEntity memberEntity) {
+
         Optional<CartEntity>cartEntity = cartRepository.findByMemberEntity(memberEntity);
+
         if (cartEntity.isPresent()) {
-            CartEntity cartEntity1 = cartEntity.get();
-            cartEntity1.setMemberEntity(memberEntity);
-            cartEntity1.setId(cartEntity1.getId());
-            cartRepository.save(cartEntity1);
 
             CartItemEntity cartItemEntity = new CartItemEntity();
             cartItemEntity.setCartName(itemDTO.getItemName());
             cartItemEntity.setCartCount(itemDTO.getCartCount());
-            cartItemEntity.setCartEntity(cartEntity1);
-
             ItemEntity itemEntity =itemRepository.findById(itemDTO.getId()).get();
             cartItemEntity.setItemEntity(itemEntity);
-
             cartItemRepository.save(cartItemEntity);
+            return memberEntity.getUserId();
 
         }else {
             CartEntity cartEntity1 = new CartEntity();
             cartEntity1.setMemberEntity(memberEntity);
             cartRepository.save(cartEntity1);
 
-            CartItemEntity cartItemEntity = new CartItemEntity();
-            cartItemEntity.setCartName(itemDTO.getItemName());
-            cartItemEntity.setCartCount(itemDTO.getItemCount());
-            cartItemEntity.setCartCount(itemDTO.getCartCount());
-            cartItemEntity.setCartEntity(cartEntity1);
+            CartItemEntity cartItemEntity = createNewEntity(itemDTO);
 
             ItemEntity itemEntity =itemRepository.findById(itemDTO.getId()).get();
             cartItemEntity.setItemEntity(itemEntity);
 
             cartItemRepository.save(cartItemEntity);
         }
+        return null;
+    }
+
+    private CartItemEntity createNewEntity(ItemDTO itemDTO){
+        CartItemEntity cartItemEntity = new CartItemEntity();
+        cartItemEntity.setCartName(itemDTO.getItemName());
+        cartItemEntity.setCartCount(itemDTO.getItemCount());
+        cartItemEntity.setCartCount(itemDTO.getCartCount());
+        return cartItemEntity;
     }
 
 

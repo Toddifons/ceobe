@@ -78,7 +78,7 @@ public class MemberEntity extends BaseEntity {
     private List<ReplyEntity> replyEntityList = new ArrayList<>();
 
     @Builder
-    public MemberEntity(Long id, String userId, String memberPassword, String memberEmail, String memberName, String memberMobile, String memberAddress, String detailAddress, String extraAddress, String postcode, List<OrderEntity> orderEntityList, List<CartEntity> cartEntityList, List<QuestionEntity> questionEntityList, List<ReplyEntity> replyEntityList, RoleType role) {
+    public MemberEntity(Long id, String userId, String memberPassword, String memberEmail, String memberName, String memberMobile, String memberAddress, String detailAddress, String extraAddress, String postcode, List<OrderEntity> orderEntityList, List<CartEntity> cartEntityList, List<QuestionEntity> questionEntityList, List<ReplyEntity> replyEntityList) {
         this.id = id;
         this.userId = userId;
         this.memberPassword = memberPassword;

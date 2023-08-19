@@ -21,16 +21,28 @@ public class MemberService {
     private final CartRepository cartRepository;
 
     public Long save(MemberDTO memberDTO) {
-        Long savedId = memberRepository.save(MemberEntity.toSaveEntity(memberDTO)).getId();
-        Optional<MemberEntity> memberEntity = memberRepository.findById(savedId);
-        if (memberEntity.isPresent()) {
-            MemberEntity memberEntity1 = memberEntity.get();
-            CartEntity cartEntity = new CartEntity();
-            cartEntity.setMemberEntity(memberEntity1);
-            cartRepository.save(cartEntity);
-        }
 
-        return savedId;
+       MemberEntity saveMember = MemberEntity.toSaveEntity(memberDTO);
+
+       MemberEntity findMember = memberRepository.findById(saveMember.getId())
+               .orElseThrow(() -> new IllegalArgumentException("Member Not Found"));
+
+       if (findMember != null){
+           System.out.println("이미 회원입니다.");
+       } else {
+           memberRepository.save(saveMember);
+       }
+
+//        Long savedId = memberRepository.save(MemberEntity.toSaveEntity(memberDTO)).getId();
+//        Optional<MemberEntity> memberEntity = memberRepository.findById(savedId);
+//        if (memberEntity.isPresent()) {
+//            MemberEntity memberEntity1 = memberEntity.get();
+//            CartEntity cartEntity = new CartEntity();
+//            cartEntity.setMemberEntity(memberEntity1);
+//            cartRepository.save(cartEntity);
+//        }
+
+        return saveMember.getId();
     }
 
     public MemberDTO memberLogin(MemberDTO memberDTO) {

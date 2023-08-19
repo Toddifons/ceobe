@@ -1,5 +1,6 @@
-package com.shiromi.ceobe.question.entity;
+package com.shiromi.ceobe.reply.entity;
 
+import com.shiromi.ceobe.question.entity.QuestionEntity;
 import com.shiromi.common.entity.BaseEntity;
 import com.shiromi.ceobe.member.entity.MemberEntity;
 import lombok.Getter;
