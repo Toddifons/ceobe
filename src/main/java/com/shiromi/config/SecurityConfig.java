@@ -22,16 +22,12 @@ public class SecurityConfig {
     private final PrincipalOauth2UserService principalOauth2UserService;
 
     @Bean
-    public AuthenticationManager authenticationManager(
-            AuthenticationConfiguration authenticationConfiguration) throws Exception{
-        return authenticationConfiguration.getAuthenticationManager();
-    }
-
-    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.csrf(csrf -> csrf.disable())
                 .httpBasic(httpBasic -> httpBasic.disable())
                 .authorizeHttpRequests(authorize -> authorize
+                        .antMatchers("/", "/member/**", "/img/**","/css/**","/js/**","/jsp/**", "/style/**").permitAll()
+
                         //== USER & ADMIN ==//
                         .antMatchers("/cart/saved",
                                 "/cart/{id}",
@@ -83,13 +79,13 @@ public class SecurityConfig {
                                 "/member/save", "/member/duplicate-check-userId", "/member/login",
                                 "/member/auth/login", "/member/logout", "/member/logout2", "/member/mailConfirm",
                                 "/member/searchPassword", "/member/searchPasswordUpdate").permitAll()*/
-                        .anyRequest().permitAll())
+                        .anyRequest().authenticated())
 
-                .formLogin(formLogin -> formLogin.loginPage("/auth/loginForm")
-                        .loginProcessingUrl("/auth/login")
+                .formLogin(formLogin -> formLogin.loginPage("/member/login")
                         .defaultSuccessUrl("/"))
 
-                .oauth2Login(oauth2Login -> oauth2Login.loginPage("/auth/loginForm")
+                .oauth2Login(oauth2Login -> oauth2Login.loginPage("/member/login")
+                        .defaultSuccessUrl("/", true)
                         .userInfoEndpoint()
                         .userService(principalOauth2UserService))
                 .build();

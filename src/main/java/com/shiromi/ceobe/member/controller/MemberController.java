@@ -43,8 +43,8 @@ public class MemberController {
 
     //일반 로그인 화면
     @GetMapping("/login")
-    public String loginForm(/*@RequestParam(value = "redirectURL", defaultValue = "/") String redirectURL, Model model*/) {
-        //model.addAttribute("redirectURL", redirectURL);
+    public String loginForm(@RequestParam(value = "redirectURL", defaultValue = "/") String redirectURL, Model model) {
+        model.addAttribute("redirectURL", redirectURL);
         return "memberPages/memberLogin";
     }
 
@@ -152,12 +152,12 @@ public class MemberController {
         return "redirect:/";
     }
 
-    //카카오 로그아웃
-    @GetMapping("/logout2")
-    public @ResponseBody String kakaoLogout2(HttpSession session) {
-        session.invalidate();
-        return "로그아웃";
-    }
+//    //카카오 로그아웃
+//    @GetMapping("/logout2")
+//    public @ResponseBody String kakaoLogout2(HttpSession session) {
+//        session.invalidate();
+//        return "로그아웃";
+//    }
 
     // 이메일 중복체크, 이메일 인증
     @PostMapping("/mailConfirm")

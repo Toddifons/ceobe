@@ -1,6 +1,7 @@
 package com.shiromi.ceobe.question.entity;
 
 import com.shiromi.ceobe.question.dto.QuestionDTO;
+import com.shiromi.ceobe.reply.entity.ReplyEntity;
 import com.shiromi.common.entity.BaseEntity;
 import com.shiromi.ceobe.member.entity.MemberEntity;
 import lombok.Builder;
@@ -9,6 +10,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Setter
 @Getter
@@ -40,18 +43,18 @@ public class QuestionEntity extends BaseEntity {
     private MemberEntity memberEntity;
 
     //== ReplyEntity가 없어서 우선 주석 처리 ==//
-//    //    question(질문) : reply(답변) = 1 : M
-//    @OneToMany(mappedBy = "questionEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
-//    private List<ReplyEntity> replyEntityList = new ArrayList<>();
+    //    question(질문) : reply(답변) = 1 : M
+    @OneToMany(mappedBy = "questionEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<ReplyEntity> replyEntityList = new ArrayList<>();
 
-//    public static QuestionEntity toSaveEntity(QuestionDTO questionDTO , MemberEntity memberEntity){
-////        QuestionEntity questionEntity = new QuestionEntity();
-////        questionEntity.setQuestionName(questionDTO.getQuestionName());
-////        questionEntity.setQuestionTitle(questionDTO.getQuestionTitle());
-////        questionEntity.setQuestionContents(questionDTO.getQuestionContents());
-////        questionEntity.setQuestionStatus(questionDTO.getQuestionStatus());
-////        questionEntity.setMemberEntity(memberEntity);
-////        return questionEntity;
-//    }
+    public static QuestionEntity toSaveEntity(QuestionDTO questionDTO , MemberEntity memberEntity){
+        QuestionEntity questionEntity = new QuestionEntity();
+        questionEntity.setQuestionName(questionDTO.getQuestionName());
+        questionEntity.setQuestionTitle(questionDTO.getQuestionTitle());
+        questionEntity.setQuestionContents(questionDTO.getQuestionContents());
+        questionEntity.setQuestionStatus(questionDTO.getQuestionStatus());
+        questionEntity.setMemberEntity(memberEntity);
+        return questionEntity;
+    }
 
 }

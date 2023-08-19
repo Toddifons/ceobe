@@ -34,7 +34,7 @@
 
     </style>
     <div id="wrap">
-<!--        header-->
+        <!--        header-->
         <div id="header_bg" style="position: relative">
             <header>
                 <div id="my_menu" style="float: left">><a href="#"><img th:src="@{/img/my_icon.png}" alt="my_menu"></a></div>
@@ -60,14 +60,14 @@
 
                         <div th:unless="${session.member}">
                             <li><a href="/member/login">로그인</a></li>
-                            <li><a  href="/member/signup">회원가입</a></li>
+                            <li><a  href="/member/save">회원가입</a></li>
                             <li><a  href="/question/list">고객센터</a></li>
                             <li><a  href="/order">주문하기</a></li>
                         </div>
                     </div>
                 </ul>
 
-<!--                로고부분 헤더-->
+                <!--                로고부분 헤더-->
                 <div id="h_btm" style="width: 950px; position: relative">
                     <a href="/"><img th:src="@{/img/zb_logo.jpg}" width="150" height="100" alt="도그쿡"></a>
                     <nav>
@@ -89,7 +89,7 @@
                                 </div>
                             </div>
                         </div>
-<!--                        광고배너 넣으면 좋을듯 합니다-->
+                        <!--                        광고배너 넣으면 좋을듯 합니다-->
                         <ul style="margin-left: 20px;">
                             <li style="width: 80px ; height: 100px"><a class="aa" href="/item/category1">PC</a></li>
                             <li style="width: 80px ; height: 100px"><a class="aa" href="/item/category2">컴퓨터부품</a></li>
@@ -100,23 +100,23 @@
                 </div>
             </header>
         </div>
-<!--        헤더 끝-->
+        <!--        헤더 끝-->
     </div>
 
-<script th:inline="javascript">
+    <script th:inline="javascript">
 
-    const logout = () => {
-        axios({
-            method: "get",
-            url: "/member/logout2",
-        }).then(res => {
-            console.log("로그아웃 성공");
-            location.href = 'https://kauth.kakao.com/oauth/logout?client_id=d5397ddd558442067fc3dfb0fd736f8b&logout_redirect_uri=http://localhost:8081';
-        }).catch(err => {
-            alert("실패");
-        })
-        console.log([[${session.member}]]);
-    }
-</script>
+        const logout = () => {
+            axios({
+                method: "get",
+                url: "/member/logout2",
+            }).then(res => {
+                console.log("로그아웃 성공");
+                location.href = 'https://kauth.kakao.com/oauth/logout?client_id=d5397ddd558442067fc3dfb0fd736f8b&logout_redirect_uri=http://localhost:8081';
+            }).catch(err => {
+                alert("실패");
+            })
+            console.log([[${session.member}]]);
+        }
+    </script>
 </th:block>
 </html>

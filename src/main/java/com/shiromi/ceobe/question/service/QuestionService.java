@@ -25,7 +25,7 @@ import java.util.Optional;
 public class QuestionService {
     public final QuestionRepository questionRepository;
     private final MemberRepository memberRepository;
-    //private final ReplyRepository replyRepository;
+    private final ReplyRepository replyRepository;
 
     public void save(QuestionDTO questionDTO) {
         Long id = questionDTO.getMemberId();
