@@ -50,10 +50,10 @@ public class MemberController {
 
     //로그인 처리
     @PostMapping("/login")
-    public @ResponseBody String login(@ModelAttribute MemberDTO memberDTO/*, HttpSession session, @RequestParam(value = "redirectURL", defaultValue = "/") String redirectURL*/) {
+    public @ResponseBody String login(@ModelAttribute MemberDTO memberDTO, HttpSession session/*, @RequestParam(value = "redirectURL", defaultValue = "/") String redirectURL*/) {
         MemberDTO result = memberService.memberLogin(memberDTO);
         if (result != null) {
-            //session.setAttribute("member", result);
+            session.setAttribute("member", result);
             //System.out.println("redirect:" + redirectURL);
             return "ok";
         } else {
