@@ -55,7 +55,24 @@ public class ItemDTO {
         this.cartItemId = cartItemId;
     }
 
+    public ItemEntity toEntity() {
+        return ItemEntity.builder()
+                .id(id)
+                .itemName(itemName)
+                .itemPrice(itemPrice)
+                .itemContents(itemContents)
+                .itemCount(itemCount)
+                .itemCategory(itemCategory)
+                .fileAttachedItem(fileAttachedItem)
+                .itemSellCount(itemSellCount)
+                .build();
+                //itemFile
+                //itemFileUpdate
+                //originalFileNameItem
+                //storedFileNameItem
 
+
+    }
 
     public static ItemDTO toItemDTO(ItemEntity itemEntity){
         ItemDTO itemDTO = new ItemDTO();
