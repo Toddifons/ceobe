@@ -29,7 +29,7 @@ public class MemberController {
     }
 
     //userId 중복체크
-    @PostMapping("/duplicate-check-userId")
+    @PostMapping("/checkUserId")
     public @ResponseBody String userIdDuplicateCheck(@RequestParam("userId") String userId) {
         String checkResult = memberService.userIdDuplicateCheck(userId);
         if (checkResult.equals("success")) {
