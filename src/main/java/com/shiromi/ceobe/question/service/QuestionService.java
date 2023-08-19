@@ -7,6 +7,7 @@ import com.shiromi.ceobe.question.entity.QuestionEntity;
 import com.shiromi.ceobe.question.repository.QuestionRepository;
 import com.shiromi.ceobe.reply.dto.ReplyDTO;
 import com.shiromi.ceobe.reply.entity.ReplyEntity;
+import com.shiromi.ceobe.reply.repository.ReplyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -101,4 +102,4 @@ public class QuestionService {
     }
 }
 
-}z
+
