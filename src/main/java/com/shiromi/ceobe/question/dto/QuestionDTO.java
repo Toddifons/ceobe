@@ -20,7 +20,7 @@ public class QuestionDTO {
 
     public static QuestionDTO toDTO(QuestionEntity questionEntity) {
         QuestionDTO questionDTO = new QuestionDTO();
-        questionDTO.setId(questionEntity.getQuestionId());
+        questionDTO.setId(questionEntity.getId());
         questionDTO.setQuestionName(questionEntity.getQuestionName());
         questionDTO.setQuestionTitle(questionEntity.getQuestionTitle());
         questionDTO.setQuestionContents(questionEntity.getQuestionContents());
@@ -31,7 +31,7 @@ public class QuestionDTO {
     }
     public static <U> U toQuestionDTO(QuestionEntity questionEntity) {
         QuestionDTO questionDTO = new QuestionDTO();
-        questionDTO.setId(questionEntity.getQuestionId());
+        questionDTO.setId(questionEntity.getId());
         questionDTO.setQuestionName(questionEntity.getQuestionName());
         questionDTO.setQuestionTitle(questionEntity.getQuestionTitle());
         questionDTO.setQuestionContents(questionEntity.getQuestionContents());

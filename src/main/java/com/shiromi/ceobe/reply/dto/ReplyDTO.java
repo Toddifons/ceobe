@@ -21,7 +21,7 @@ public class ReplyDTO {
 
     public static ReplyDTO toReplyDTO(ReplyEntity replyEntity) {
         ReplyDTO replyDTO = new ReplyDTO();
-        replyDTO.setId(replyEntity.getQuestionAnswerId());
+        replyDTO.setId(replyEntity.getId());
         replyDTO.setReplyContents(replyEntity.getReplyContents());
         replyDTO.setReplyName(replyEntity.getReplyName());
         replyDTO.setReplyDate(replyEntity.getCreatedTime());
