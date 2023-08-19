@@ -5,7 +5,9 @@ import com.shiromi.ceobe.cart.repository.CartRepository;
 import com.shiromi.ceobe.member.dto.MemberDTO;
 import com.shiromi.ceobe.member.entity.MemberEntity;
 import com.shiromi.ceobe.member.repository.MemberRepository;
+import com.shiromi.config.auth.RoleType;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MemberService {
@@ -23,12 +26,14 @@ public class MemberService {
     public Long save(MemberDTO memberDTO) {
 
        MemberEntity saveMember = MemberEntity.toSaveEntity(memberDTO);
+       saveMember.setRole(RoleType.USER);
 
        MemberEntity findMember = memberRepository.findById(saveMember.getId())
                .orElseThrow(() -> new IllegalArgumentException("Member Not Found"));
 
+
        if (findMember != null){
-           System.out.println("이미 회원입니다.");
+           log.info("이미 회원입니다.");
        } else {
            memberRepository.save(saveMember);
        }
