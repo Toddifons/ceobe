@@ -80,6 +80,33 @@ public class ItemEntity extends BaseEntity {
         this.commentEntityList = commentEntityList;
     }
 
+    public ItemDTO toItemDTO() {
+        ItemDTO dto = ItemDTO.builder()
+                .id(id)
+                .itemName(itemName)
+                .itemPrice(itemPrice)
+                .itemContents(itemContents)
+                .itemCount(itemCount)
+                .itemCategory(itemCategory)
+                .fileAttachedItem(fileAttachedItem)
+                .itemSellCount(itemSellCount)
+                .build();
+        if (this.fileAttachedItem == 1) {
+            dto.setFileAttachedItem(this.fileAttachedItem);
+            List<String> originalFileNameList = new ArrayList<>();
+            List<String> storedFileNameList = new ArrayList<>();
+            for (ItemFileEntity itemFileEntity : this.itemFileEntityList) {
+                originalFileNameList.add(itemFileEntity.getOriginalFileNameItem());
+                storedFileNameList.add(itemFileEntity.getStoredFileNameItem());
+            }
+            dto.setOriginalFileNameItem(originalFileNameList);
+            dto.setStoredFileNameItem(storedFileNameList);
+        }else{
+            dto.setFileAttachedItem(this.fileAttachedItem);
+        }
+        return dto;
+    }
+
     public static ItemEntity toItemSaveEntity(ItemDTO itemDTO) {
         ItemEntity itementity = new ItemEntity();
         itementity.setItemName(itemDTO.getItemName());
