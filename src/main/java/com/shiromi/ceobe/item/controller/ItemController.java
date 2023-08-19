@@ -1,8 +1,10 @@
 package com.shiromi.ceobe.item.controller;
 
+import com.shiromi.ceobe.comment.service.CommentService;
 import com.shiromi.ceobe.item.dto.ItemDTO;
 import com.shiromi.ceobe.item.service.ItemService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -12,10 +14,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 public class ItemController {
     private final ItemService itemService;
+    private final CommentService commentService;
 
     //상품 저장 화면
     @GetMapping("/item/save")
@@ -30,10 +34,12 @@ public class ItemController {
     }
     //상품 메인
     @GetMapping("/item/main")
-    public String findAll(@PageableDefault(page = 1,size = 5) Pageable pageable, Model model , @RequestParam(required = false , value = "sort", defaultValue = "id") String sort
-            , @RequestParam(required = false , value = "search", defaultValue = "") String search,
+    public String findAll(@PageableDefault(page = 1,size = 5) Pageable pageable, Model model ,
+                          @RequestParam(required = false , value = "sort", defaultValue = "id") String sort,
+                          @RequestParam(required = false , value = "search", defaultValue = "") String search,
                           @RequestParam(required = false , value = "category", defaultValue = "") String category){
         Page<ItemDTO> itemDTOList = itemService.findAll(pageable, sort, search , category);
+
         if(itemDTOList.getTotalElements() == 0){
             model.addAttribute("message","null");
         }
@@ -54,10 +60,11 @@ public class ItemController {
 
     //상품 상세조회
     @GetMapping("/item/")
-    public String findById(@RequestParam("itemId") Long itemId, Model model){
-        System.out.println( "itemId = " + itemId);
-        ItemDTO itemDTO = itemService.findById(itemId);
-        model.addAttribute("item",itemDTO);
+    public String findById(@PageableDefault(page = 1) Pageable pageable,
+                           @RequestParam("itemId") Long itemId, Model model){
+        log.info("itemId : {} ", itemId);
+        model.addAttribute("item", itemService.findById(itemId));
+        model.addAttribute("commentListPage",commentService.findAll(itemId,pageable));
         return "itemPages/itemDetail";
     }
 
@@ -163,5 +170,4 @@ public class ItemController {
         model.addAttribute("category", category);
         return "itemPages/itemCtry3";
     }
-
 }
