@@ -5,10 +5,12 @@ import com.shiromi.common.entity.BaseEntity;
 import com.shiromi.ceobe.member.entity.MemberEntity;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@Setter
 @Getter
 @Entity
 @Table(name = "question")
@@ -16,7 +18,7 @@ public class QuestionEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long questionId;
+    private Long id;
 
     @Column(length = 20)
     private String questionName;
