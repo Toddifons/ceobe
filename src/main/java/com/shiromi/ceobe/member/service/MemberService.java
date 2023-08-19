@@ -23,15 +23,12 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final CartRepository cartRepository;
 
-    public Long save(MemberDTO memberDTO) {
-
+    //== 회원 가입 ==//
+    public Long signup(MemberDTO memberDTO) {
        MemberEntity saveMember = MemberEntity.toSaveEntity(memberDTO);
        saveMember.setRole(RoleType.USER);
-
        MemberEntity findMember = memberRepository.findById(saveMember.getId())
                .orElseThrow(() -> new IllegalArgumentException("Member Not Found"));
-
-
        if (findMember != null){
            log.info("이미 회원입니다.");
        } else {
@@ -65,6 +62,7 @@ public class MemberService {
         }
     }
 
+    //== 중복 id 검사 ==//
     public String userIdDuplicateCheck(String userId) {
         Optional<MemberEntity> optionalMemberEntity = memberRepository.findByUserId(userId);
         if (optionalMemberEntity.isPresent()) {

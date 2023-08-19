@@ -251,14 +251,8 @@ fieldset, img {
     float: right;
 }
 
-
 .inner_login h3{
     padding-top: 30px;
-}
-
-.inner_login> :nth-child(2) img{
-    width: 40px;
-    margin: 0 10px;
 }
 
 .inner_login p{
@@ -269,3 +263,18 @@ fieldset, img {
     clear: both;
     height: 500px;
 }
+
+.auth_btn_login {
+    display: inline-block;
+    border: none;
+    padding: 0;
+    background: none;
+}
+
+.auth_btn_login img {
+    width: 200px;
+    height: 50px;
+    margin: 4px;
+    display: block;
+}
+
