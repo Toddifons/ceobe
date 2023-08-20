@@ -1,7 +1,9 @@
 package com.shiromi.ceobe.question.controller;
 
+import com.shiromi.ceobe.reply.dto.ReplyDTO;
 import com.shiromi.ceobe.question.dto.QuestionDTO;
 import com.shiromi.ceobe.question.service.QuestionService;
+import com.shiromi.ceobe.reply.dto.ReplyDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -1,6 +1,7 @@
 package com.shiromi.ceobe.item.entity;
 
 import com.shiromi.ceobe.cartItem.entity.CartItemEntity;
+import com.shiromi.ceobe.comment.entity.CommentEntity;
 import com.shiromi.common.entity.BaseEntity;
 import com.shiromi.ceobe.item.dto.ItemDTO;
 import com.shiromi.ceobe.itemFile.entity.ItemFileEntity;
@@ -59,17 +60,51 @@ public class ItemEntity extends BaseEntity {
     @OneToMany(mappedBy = "itemEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<CartItemEntity> cartItemEntityList = new ArrayList<>();
 
+    //item(상품) : comment(후기) = 1 : M
+    @OneToMany(mappedBy = "itemEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<CommentEntity> commentEntityList = new ArrayList<>();
+
     @Builder
-    public ItemEntity(Long id, String itemName, int itemPrice, String itemContents, int itemCount, int fileAttachedItem, String itemCategory, int itemSellCount) {
+    public ItemEntity(Long id, String itemName, int itemPrice, String itemContents, int itemCount, int fileAttachedItem, String itemCategory, int itemSellCount, List<ItemFileEntity> itemFileEntityList, List<OrderItemEntity> orderItemEntityList, List<CartItemEntity> cartItemEntityList, List<CommentEntity> commentEntityList) {
         this.id = id;
         this.itemName = itemName;
         this.itemPrice = itemPrice;
         this.itemContents = itemContents;
         this.itemCount = itemCount;
-
         this.fileAttachedItem = fileAttachedItem;
         this.itemCategory = itemCategory;
         this.itemSellCount = itemSellCount;
+        this.itemFileEntityList = itemFileEntityList;
+        this.orderItemEntityList = orderItemEntityList;
+        this.cartItemEntityList = cartItemEntityList;
+        this.commentEntityList = commentEntityList;
+    }
+
+    public ItemDTO toItemDTO() {
+        ItemDTO dto = ItemDTO.builder()
+                .id(id)
+                .itemName(itemName)
+                .itemPrice(itemPrice)
+                .itemContents(itemContents)
+                .itemCount(itemCount)
+                .itemCategory(itemCategory)
+                .fileAttachedItem(fileAttachedItem)
+                .itemSellCount(itemSellCount)
+                .build();
+        if (this.fileAttachedItem == 1) {
+            dto.setFileAttachedItem(this.fileAttachedItem);
+            List<String> originalFileNameList = new ArrayList<>();
+            List<String> storedFileNameList = new ArrayList<>();
+            for (ItemFileEntity itemFileEntity : this.itemFileEntityList) {
+                originalFileNameList.add(itemFileEntity.getOriginalFileNameItem());
+                storedFileNameList.add(itemFileEntity.getStoredFileNameItem());
+            }
+            dto.setOriginalFileNameItem(originalFileNameList);
+            dto.setStoredFileNameItem(storedFileNameList);
+        }else{
+            dto.setFileAttachedItem(this.fileAttachedItem);
+        }
+        return dto;
     }
 
     public static ItemEntity toItemSaveEntity(ItemDTO itemDTO) {

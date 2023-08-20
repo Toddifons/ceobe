@@ -1,5 +1,6 @@
 package com.shiromi.ceobe.item.service;
 
+import com.shiromi.ceobe.comment.dto.CommentDTO;
 import com.shiromi.ceobe.item.dto.ItemDTO;
 import com.shiromi.ceobe.item.entity.ItemEntity;
 import com.shiromi.ceobe.item.repository.ItemRepository;
@@ -18,6 +19,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -25,6 +28,10 @@ import java.util.Optional;
 public class ItemService {
     private final ItemRepository itemRepository;
     private final ItemFileRepository itemFileRepository;
+
+
+
+
 
     //저장
     public Long save(ItemDTO itemDTO) throws IOException {
@@ -50,34 +57,32 @@ public class ItemService {
     }
     //검색기능
     @Transactional
-    public Page<ItemDTO> findAll(Pageable pageable, String sort, String search, String category) {
+    public Map<String, Object> findAll(Pageable pageable, String sort, String search, String category) {
         int page = pageable.getPageNumber() - 1;
         int pageLimit = pageable.getPageSize();
         Page<ItemEntity> itemEntityList = itemRepository.findAll(PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, sort)));
         if (sort.equals("itemPrice")) {
             itemEntityList = itemRepository.findByItemNameContaining(search, PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.ASC, sort)));
             Page<ItemDTO> itemDTOList = itemEntityList.map(ItemDTO::toItemDTO);
-            return itemDTOList;
+            return listPaging(pageable,itemDTOList,sort,search,category);
         }
         if (category.equals("itemName")) {
             itemEntityList = itemRepository.findByItemNameContaining(search, PageRequest.of(page, pageLimit, Sort.by(sort).descending()));
             Page<ItemDTO> itemDTOList = itemEntityList.map(ItemDTO::toItemDTO);
-            return itemDTOList;
+            return listPaging(pageable,itemDTOList,sort,search,category);
         }
 
         Page<ItemDTO> itemDTOList = itemEntityList.map(ItemDTO::toItemDTO);
-        return itemDTOList;
+
+        return listPaging(pageable,itemDTOList,sort,search,category);
     }
 
     //이름으로 검색
     @Transactional
     public ItemDTO findById(Long id) {
-        Optional<ItemEntity> itemEntityOptional = itemRepository.findById(id);
-        if (itemEntityOptional.isPresent()) {
-            return ItemDTO.toItemDTO(itemEntityOptional.get());
-        } else {
-            return null;
-        }
+        return itemRepository.findById(id)
+                .orElseThrow(IllegalAccessError::new)
+                .toItemDTO();
     }
     //업데이트
     @Transactional
@@ -196,6 +201,26 @@ public class ItemService {
 
         Page<ItemDTO> itemDTOList = itemEntityList.map(ItemDTO::toItemDTO);
         return itemDTOList;
+    }
+
+    private Map<String,Object> listPaging (Pageable pageable, Page<ItemDTO> itemDTOList, String sort, String search, String category) {
+        Map<String, Object> map = new HashMap<>();
+        int blockLimit = 3;
+        int startPage = (((int) (Math.ceil((double) pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1;
+        int endPage = Math.min((startPage + blockLimit - 1), itemDTOList.getTotalPages());
+        map.put("startPage", startPage);
+        map.put("endPage", endPage);
+        map.put("sort", sort);
+        map.put("size", pageable.getPageSize());
+        map.put("page", pageable.getPageNumber());
+        map.put("search", search);
+        map.put("category", category);
+        if(itemDTOList.getTotalElements() == 0){
+            map.put("message","null");
+        }
+        map.put("itemList",itemDTOList);
+
+        return map;
     }
 
 }

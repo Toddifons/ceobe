@@ -35,7 +35,7 @@ public class ItemDTO {
     private Long cartItemId;
 
     @Builder
-    public ItemDTO(Long id, String itemName, int itemPrice, String itemContents, LocalDateTime itemCreatedDate, int itemCount, String itemCategory, int fileAttachedItem, int itemSellCount) {
+    public ItemDTO(Long id, String itemName, int itemPrice, String itemContents, LocalDateTime itemCreatedDate, int itemCount, String itemCategory, int fileAttachedItem, int itemSellCount, List<MultipartFile> itemFile, List<MultipartFile> itemFileUpdate, List<String> originalFileNameItem, List<String> storedFileNameItem, String itemImage, String userId, int cartCount, Long cartItemId) {
         this.id = id;
         this.itemName = itemName;
         this.itemPrice = itemPrice;
@@ -45,6 +45,33 @@ public class ItemDTO {
         this.itemCategory = itemCategory;
         this.fileAttachedItem = fileAttachedItem;
         this.itemSellCount = itemSellCount;
+        this.itemFile = itemFile;
+        this.itemFileUpdate = itemFileUpdate;
+        this.originalFileNameItem = originalFileNameItem;
+        this.storedFileNameItem = storedFileNameItem;
+        this.itemImage = itemImage;
+        this.userId = userId;
+        this.cartCount = cartCount;
+        this.cartItemId = cartItemId;
+    }
+
+    public ItemEntity toEntity() {
+        return ItemEntity.builder()
+                .id(id)
+                .itemName(itemName)
+                .itemPrice(itemPrice)
+                .itemContents(itemContents)
+                .itemCount(itemCount)
+                .itemCategory(itemCategory)
+                .fileAttachedItem(fileAttachedItem)
+                .itemSellCount(itemSellCount)
+                .build();
+                //itemFile
+                //itemFileUpdate
+                //originalFileNameItem
+                //storedFileNameItem
+
+
     }
 
     public static ItemDTO toItemDTO(ItemEntity itemEntity){

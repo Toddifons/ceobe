@@ -1,16 +1,19 @@
 package com.shiromi.ceobe.member.entity;
 
 import com.shiromi.ceobe.cart.entity.CartEntity;
+import com.shiromi.ceobe.reply.entity.ReplyEntity;
 import com.shiromi.common.entity.BaseEntity;
 import com.shiromi.ceobe.member.dto.MemberDTO;
 import com.shiromi.ceobe.order.entity.OrderEntity;
 import com.shiromi.ceobe.question.entity.QuestionEntity;
-import com.shiromi.ceobe.question.entity.ReplyEntity;
 import com.shiromi.config.auth.RoleType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -61,24 +64,32 @@ public class MemberEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private RoleType role;
 
-    //    member(회원) : order(주문) = 1 : M
+    // member(회원) : order(주문) = 1 : M
+    @Fetch(FetchMode.SUBSELECT)
     @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    @BatchSize(size = 10)
     private List<OrderEntity> orderEntityList = new ArrayList<>();
 
-    //    member(회원) : cart(장바구니) = 1 : M
+    // member(회원) : cart(장바구니) = 1 : M
+    @Fetch(FetchMode.SUBSELECT)
     @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    @BatchSize(size = 10)
     private List<CartEntity> cartEntityList = new ArrayList<>();
 
-    //    member(회원) : question(질문) = 1 : M
+    // member(회원) : question(질문) = 1 : M
+    @Fetch(FetchMode.SUBSELECT)
     @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    @BatchSize(size = 10)
     private List<QuestionEntity> questionEntityList = new ArrayList<>();
 
-    //    member(회원) : reply(답변) = 1 : M
+    // member(회원) : reply(답변) = 1 : M
+    @Fetch(FetchMode.SUBSELECT)
     @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    @BatchSize(size = 10)
     private List<ReplyEntity> replyEntityList = new ArrayList<>();
 
     @Builder
-    public MemberEntity(Long id, String userId, String memberPassword, String memberEmail, String memberName, String memberMobile, String memberAddress, String detailAddress, String extraAddress, String postcode, List<OrderEntity> orderEntityList, List<CartEntity> cartEntityList, List<QuestionEntity> questionEntityList, List<ReplyEntity> replyEntityList) {
+    public MemberEntity(Long id, String userId, String memberPassword, String memberEmail, String memberName, String memberMobile, String memberAddress, String detailAddress, String extraAddress, String postcode, List<OrderEntity> orderEntityList, List<CartEntity> cartEntityList, List<QuestionEntity> questionEntityList, List<ReplyEntity> replyEntityList, RoleType role) {
         this.id = id;
         this.userId = userId;
         this.memberPassword = memberPassword;

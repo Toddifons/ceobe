@@ -5,43 +5,31 @@ import com.shiromi.ceobe.cart.repository.CartRepository;
 import com.shiromi.ceobe.member.dto.MemberDTO;
 import com.shiromi.ceobe.member.entity.MemberEntity;
 import com.shiromi.ceobe.member.repository.MemberRepository;
+import com.shiromi.config.auth.RoleType;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class MemberService {
     private final MemberRepository memberRepository;
     private final CartRepository cartRepository;
 
-    public Long save(MemberDTO memberDTO) {
-
+    //== 회원 가입 ==//
+    public Long signup(MemberDTO memberDTO) {
        MemberEntity saveMember = MemberEntity.toSaveEntity(memberDTO);
-
-       MemberEntity findMember = memberRepository.findById(saveMember.getId())
-               .orElseThrow(() -> new IllegalArgumentException("Member Not Found"));
-
-       if (findMember != null){
-           System.out.println("이미 회원입니다.");
-       } else {
-           memberRepository.save(saveMember);
-       }
-
-//        Long savedId = memberRepository.save(MemberEntity.toSaveEntity(memberDTO)).getId();
-//        Optional<MemberEntity> memberEntity = memberRepository.findById(savedId);
-//        if (memberEntity.isPresent()) {
-//            MemberEntity memberEntity1 = memberEntity.get();
-//            CartEntity cartEntity = new CartEntity();
-//            cartEntity.setMemberEntity(memberEntity1);
-//            cartRepository.save(cartEntity);
-//        }
-
+       saveMember.setRole(RoleType.USER);
+       memberRepository.save(saveMember);
         return saveMember.getId();
     }
 
@@ -60,6 +48,7 @@ public class MemberService {
         }
     }
 
+    //== 중복 id 검사 ==//
     public String userIdDuplicateCheck(String userId) {
         Optional<MemberEntity> optionalMemberEntity = memberRepository.findByUserId(userId);
         if (optionalMemberEntity.isPresent()) {
@@ -105,9 +94,10 @@ public class MemberService {
         }
     }
 
+    @Transactional
     public void update(MemberDTO memberDTO) {
-        MemberEntity updateEntity = MemberEntity.toUpdateEntity(memberDTO);
-        memberRepository.save(updateEntity);
+        MemberEntity memberEntity = memberRepository.findByUserId(memberDTO.getUserId()).orElseThrow();
+        memberEntity.setMemberPassword(memberDTO.getMemberPassword());
     }
 
     public MemberDTO saveKakao(MemberDTO memberDTO) {

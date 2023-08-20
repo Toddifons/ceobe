@@ -86,11 +86,11 @@
     <div style="white-space:pre;" th:text="${item.itemContents}"></div>
 </div>
 
-<div class="container mt-5" id="comment-list">
-    <div th:if="${commentList == 'empty'}">
+<div class="container mt-5" id="comment-list" th:object="${commentListPage}">
+    <div th:if="*{commentList == 'empty'}">
         <p>작성된 후기가 없습니다.</p>
     </div>
-    <div th:unless="${commentList == 'empty'}">
+    <div th:unless="*{commentList == 'empty'}">
         <table class="table">
             <tr>
                 <th style="padding-left: 200px;">주문후기</th>
@@ -98,7 +98,7 @@
                 <th style="width: 216px;">작성시간</th>
                 <th style="width: 116px;">별점</th>
             </tr>
-            <tr th:each="comment: ${commentList}">
+            <tr th:each="comment: *{commentList}">
                 <input type="hidden" th:value="${comment.id}" name="commentId">
                 <td th:text="${comment.commentContents}" style="padding-left: 30px;"></td>
                 <td th:text="${comment.commentWriter}" class="comment-font"></td>
@@ -123,11 +123,11 @@
                         <span>First</span>
                     </a>
                 </li>
-                <li th:class="${commentList.first} ? 'disabled'" class="page-item">
+                <li th:class="*{commentList.first} ? 'disabled'" class="page-item">
                     <!--boardList.first: isFirst()
                         boardList.number: getNumber()-->
                     <a class="page-link"
-                       th:href="${commentList.first} ? '#' : @{/item/(page=${commentList.number},itemId=${itemId})}">
+                       th:href="*{commentList.first} ? '#' : @{/item/(page=*{commentList.number},itemId=${itemId})}">
                         <!-- 사용자 3페이지, number 2 /board?page=2-->
                         <span><</span> <!-- < -->
                     </a>
@@ -144,16 +144,16 @@
                     현재 3페이지를 보고 있다면 다음 페이지는 4페이지임.
                     getNumber() 값은 2임.
                     따라서 4페이지를 보고 싶다면 getNumber()+2를 해야 컨트롤러에 4를 요청할 수 있음. -->
-                <li th:class="${commentList.last} ? 'disabled'">
+                <li th:class="*{commentList.last} ? 'disabled'">
                     <a class="page-link"
-                       th:href="${commentList.last} ? '#' : @{/item/(page=${commentList.number + 2},itemId=${itemId})}">
+                       th:href="*{commentList.last} ? '#' : @{/item/(page=*{commentList.number + 2},itemId=${itemId})}">
                         <span>&gt;</span>
                     </a>
                 </li>
 
                 <li class="page-item">
                     <!--마지막페이지 요청 링크-->
-                    <a class="page-link" th:href="@{/item/(page=${commentList.totalPages},itemId=${itemId})}">
+                    <a class="page-link" th:href="@{/item/(page=*{commentList.totalPages},itemId=${itemId})}">
                         <span>Last</span>
                     </a>
                 </li>

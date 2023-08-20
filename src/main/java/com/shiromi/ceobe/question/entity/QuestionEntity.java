@@ -1,14 +1,19 @@
 package com.shiromi.ceobe.question.entity;
 
 import com.shiromi.ceobe.question.dto.QuestionDTO;
+import com.shiromi.ceobe.reply.entity.ReplyEntity;
 import com.shiromi.common.entity.BaseEntity;
 import com.shiromi.ceobe.member.entity.MemberEntity;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+@Setter
 @Getter
 @Entity
 @Table(name = "question")
@@ -16,7 +21,7 @@ public class QuestionEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long questionId;
+    private Long id;
 
     @Column(length = 20)
     private String questionName;
@@ -37,10 +42,9 @@ public class QuestionEntity extends BaseEntity {
     @JoinColumn(name = "member_id")
     private MemberEntity memberEntity;
 
-    //== ReplyEntity가 없어서 우선 주석 처리 ==//
-//    //    question(질문) : reply(답변) = 1 : M
-//    @OneToMany(mappedBy = "questionEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
-//    private List<ReplyEntity> replyEntityList = new ArrayList<>();
+    //    question(질문) : reply(답변) = 1 : M
+    @OneToMany(mappedBy = "questionEntity", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<ReplyEntity> replyEntityList = new ArrayList<>();
 
     public static QuestionEntity toSaveEntity(QuestionDTO questionDTO , MemberEntity memberEntity){
         QuestionEntity questionEntity = new QuestionEntity();

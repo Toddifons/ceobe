@@ -4,6 +4,7 @@ import com.shiromi.ceobe.member.entity.MemberEntity;
 import com.shiromi.ceobe.member.repository.MemberRepository;
 
 import java.util.Map;
+import java.util.Optional;
 
 import com.shiromi.config.auth.PrincipalDetails;
 import com.shiromi.config.auth.RoleType;
@@ -33,30 +34,29 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         OAuth2UserInfo oauth2UserInfo = oauth2UserInfoCreate(loginProvider, oauth2User);
 
         String provider = oauth2UserInfo.getProvider();
-        String providerId = oauth2UserInfo.getProviderID();
-        String memberName = provider+"_"+providerId;
+        String providerId = oauth2UserInfo.getProviderID().substring(0,10);
+        String memberName = provider;
         //OAuth 로그인은 비밀번호를 저장하지 않음
         String password = encoderPwd.encode("Oauth2 Loging User");
         String email = oauth2UserInfo.getEmail();
         //String role = "ROLE_USER";
 
-        MemberEntity memberEntity = memberRepository.findByMemberName(memberName).orElseThrow(
-                () -> new IllegalArgumentException("Member not Found")
-        );
-
-        if(memberEntity != null) {
+        Optional<MemberEntity> findMemberEntity = memberRepository.findByMemberName(memberName);
+        MemberEntity memberEntity = null;
+        if(findMemberEntity.isPresent()) {
             System.out.println("이미 회원입니다. 이전에 OAuth로 회원가입을 진행했습니다.");
+            memberEntity = findMemberEntity.get();
         } else {
             memberEntity = memberEntity.builder()
-                    .memberName(memberEntity.getMemberName())
-                    .memberPassword(memberEntity.getMemberPassword())
-                    .memberEmail(email)
-                    .role(RoleType.USER)
                     .userId(providerId)
+                    .memberPassword("1234")
+                    .memberName(memberName)
+                    .memberEmail(email)
+                    .memberMobile("010-0000-0000")
+                    .role(RoleType.USER)
                     .build();
             memberRepository.save(memberEntity);
         }
-
         return new PrincipalDetails(memberEntity, oauth2User.getAttributes());
 
     }
@@ -86,6 +86,4 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
         return oauth2UserInfo;
     }
-
-
 }

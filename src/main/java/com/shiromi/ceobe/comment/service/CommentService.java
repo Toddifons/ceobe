@@ -11,6 +11,7 @@ import com.shiromi.ceobe.order.repository.OrderRepository;
 import com.shiromi.ceobe.orderItem.entity.OrderItemEntity;
 import com.shiromi.ceobe.orderItem.repository.OrderItemRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,10 +19,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CommentService {
@@ -43,7 +43,7 @@ public class CommentService {
     }
 
     @Transactional
-    public Page<CommentDTO> findAll(Long itemId, Pageable pageable) {
+    public Map<String,Object> findAll(Long itemId, Pageable pageable) {
         int page = pageable.getPageNumber() - 1;
         final int pageLimit = 5;
         ItemEntity itemEntity = itemRepository.findById(itemId).get();
@@ -56,7 +56,7 @@ public class CommentService {
                         comment.getCreatedTime(),
                         comment.getStarCount()
                 ));
-        return commentDTOPage;
+        return listPaging(pageable,commentDTOPage,itemId);
 //        ItemEntity itemEntity = itemRepository.findById(itemId).get();
 //        List<CommentEntity> commentEntities = itemEntity.getCommentEntityList();
 //        List<CommentDTO> commentDTOList = new ArrayList<>();
@@ -103,5 +103,24 @@ public class CommentService {
     public void delete(Long id) {
         commentRepository.deleteById(id);
     }
+
+    //코멘트리스트 페이징 처리
+    private Map<String,Object> listPaging (Pageable pageable, Page<CommentDTO> commentDTOList, Long itemId) {
+        Map<String, Object> map = new HashMap<>();
+
+        if (commentDTOList.getTotalPages() != 0) {
+            map.put("commentList", commentDTOList);
+            int blockLimit = 3;
+            int startPage = (((int)(Math.ceil((double)pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1;
+            int endPage = Math.min((startPage + blockLimit - 1), commentDTOList.getTotalPages());
+            map.put("startPage", startPage);
+            map.put("endPage", endPage);
+            map.put("itemId",itemId);
+        }else {
+            map.put("commentList", "empty");
+        }
+        return map;
+    }
+
 
 }

@@ -29,17 +29,22 @@
                     </div>
                 </div>
                 <button style="text-align: center" type="button" onclick="memberLogin()" class="btn_login">로그인</button>
+                <a href="/oauth2/authorization/google" class="auth_btn_login">
+                    <img src="/img/btn_google_login.png" alt="Google Login">
+                </a>
+                <a href="/oauth2/authorization/kakao" class="auth_btn_login">
+                    <img src="/img/btn_kakao_login.png" alt="Kakao Login">
+                </a>
+                <a href="/oauth2/authorization/facebook" class="auth_btn_login">
+                    <img src="/img/btn_facebook_login.png" alt="Facebook Login">
+                </a>
+                <a href="/oauth2/authorization/naver" class="auth_btn_login">
+                    <img src="/img/btn_naver_login.png" alt="Naver Login">
+                </a>
             </fieldset>
         </div>
-
-        <section>
-            <a id="kakao-login-btn" role="button" class="btn">
-                <img src="//k.kakaocdn.net/14/dn/btqbjxsO6vP/KPiGpdnsubSq3a0PHEGUK1/o.jpg" width="200px" height="40px"
-                     style="width: 420px;"/>
-            </a>
-        </section>
         <div>
-            <p class="mt-5">회원이 아니신가요? <a href="/member/save" class="btn-dark" style="font-weight: bold;">가입하기</a></p>
+            <p class="mt-5">회원이 아니신가요? <a href="/member/signup" class="btn-dark" style="font-weight: bold;">가입하기</a></p>
             <p class="mt-5">비밀번호를 잊으셨나요? <a href="/member/searchPassword" class="btn-dark" style="font-weight: bold;">비밀번호 찾기</a></p>
         </div>
     </article>
@@ -64,7 +69,7 @@
 
         $.ajax({
             type: "post",
-            url: "/member/login",
+            url: "/member/memberLogin",
             data: {
                 UserId: email,
                 memberPassword: pw
@@ -73,7 +78,7 @@
             success: function (result) {
                 if (result == "ok") {
                     // alert("로그인성공")
-                    location.href = "/member/login2?redirectURL=" + url;
+                    location.href = "/"
                     // window.location.replace('url');
                 } else {
                     alert("아이디 또는 비밀번호를 다시 확인해주세요")
@@ -153,9 +158,6 @@
         obj5.setAttribute('name', 'url');
         obj5.setAttribute('value', url);
 
-
-
-
         f.append(obj);
         f.append(obj2);
         f.append(obj3);
@@ -166,7 +168,5 @@
         document.body.append(f);
         f.submit();
     }
-
-
 </script>
 </html>
