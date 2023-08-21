@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="header">
+    <meta charset="UTF-8">
+    <title>🎈Find your Base:)</title>
+    <script th:src="@{/js/axios.min.js}"></script>
+    <script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
+    <script src="/static/js/bootstrap.bundle.js"></script>
+    <!--    bootstrap cdn-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/style/style2.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/style/reset.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/style/swiper.css}" type="text/css">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css"/>
+    <link th:href="@{https://fonts.googleapis.com/css?family=Nanum+Gothic}" rel="stylesheet" type="text/css"><!--폰트-->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+            integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+            integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+            crossorigin="anonymous"></script>
+    <style>
+        .aa {
+            display: inline-block;
+            transition: .3s;
+            -webkit-transform: scale(1);
+            transform: scale(1);
+            transition: color .3s;
+        }
+        .aa:hover {
+            -webkit-transform: scale(1.1);
+            transform: scale(1.1);
+        }
+
+    </style>
+    <div id="wrap">
+<!--        header-->
+        <div id="header_bg" style="position: relative">
+            <header>
+                <div id="my_menu" style="float: left">><a href="#"><img th:src="@{/img/my_icon.png}" alt="my_menu"></a></div>
+                <ul style="position: relative ; right: 100px; top: 50px">
+                    <div>
+                        <div th:if="${session.member} != null">
+                            <li th:if="${session.access_token} != null"><a onclick="logout()" href="#" role="button">카카오 로그아웃</a></li>
+                            <li th:if="${session.access_token} == null"><a href="/member/logout" role="button">로그아웃</a></li>
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                    마이페이지
+                                </a>
+
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                    <li><a class="dropdown-item" th:href="@{/order/list(userId=${session.member.userId})}">주문확인/배송조회</a></li>
+                                    <li><a class="dropdown-item" href="/member/password">내정보</a></li>
+                                </ul>
+                            </li>
+                            <li><a th:href="@{/cart/list(userId=${session.member.userId})}">장바구니</a></li>
+                            <li><a href="/question/list">고객센터</a></li>
+                            <li th:if="${session.member.userId.toString().equals('admin')}" ><a href="/member/admin">관리자페이지</a></li>
+                        </div>
+
+                        <div th:unless="${session.member}">
+                            <li><a href="/member/login">로그인</a></li>
+                            <li><a  href="/member/save">회원가입</a></li>
+                            <li><a  href="/question/list">고객센터</a></li>
+                            <li><a  href="/order">주문하기</a></li>
+                        </div>
+                    </div>
+                </ul>
+
+<!--                로고부분 헤더-->
+                <div id="h_btm" style="width: 950px; position: relative">
+                    <a href="/"><img th:src="@{/img/zb_logo.jpg}" width="150" height="100" alt="도그쿡"></a>
+                    <nav>
+                        <div class="wrap" style="position: relative ; float: left">
+                            <img th:src="@{/img/today.jpg}" alt="top_btn">
+                            <div class="search">
+                                <!-- 부트스트랩 검색창 -->
+                                <div class="navbar-form navbar-left" role="search">
+                                    <div class="form-group">
+                                        <select class="form-control" id="searchType">
+                                            <option value="1" >상품 이름</option>
+                                            <option value="4">판매자</option>
+                                            <option value="9">전체</option>
+                                        </select>
+                                        <input type="text" class="form-control" placeholder="Search" id="searchWord" th:value="${searchWord}" name="searchWord">
+                                        <input type="button" value="검색" class="form-control" onclick="searchQ2()">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+<!--                        광고배너 넣으면 좋을듯 합니다-->
+                        <ul style="margin-left: 20px;">
+                            <li style="width: 80px ; height: 100px"><a class="aa" href="/item/category1">PC</a></li>
+                            <li style="width: 80px ; height: 100px"><a class="aa" href="/item/category2">컴퓨터부품</a></li>
+                            <li style="width: 80px ; height: 100px"><a class="aa" href="/item/category3">주변기기</a></li>
+                            <li style="width: 80px ; height: 100px"><a class="aa" href="/item/main">전체상품</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </header>
+        </div>
+<!--        헤더 끝-->
+    </div>
+
+<script th:inline="javascript">
+
+    const logout = () => {
+        axios({
+            method: "get",
+            url: "/member/logout2",
+        }).then(res => {
+            console.log("로그아웃 성공");
+            location.href = 'https://kauth.kakao.com/oauth/logout?client_id=d5397ddd558442067fc3dfb0fd736f8b&logout_redirect_uri=http://localhost:8081';
+        }).catch(err => {
+            alert("실패");
+        })
+        console.log([[${session.member}]]);
+    }
+</script>
+</th:block>
+</html>

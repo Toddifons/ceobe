@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 public class MemberDTO {
     private Long id;
@@ -25,6 +26,15 @@ public class MemberDTO {
     private String accessToken;
     private String url;
 
+
+    public MemberDTO(Long id, String userId, String memberEmail, String memberName, String memberMobile, LocalDateTime memberCreatedTime) {
+        this.id = id;
+        this.userId = userId;
+        this.memberEmail = memberEmail;
+        this.memberName = memberName;
+        this.memberMobile = memberMobile;
+        this.memberCreatedTime = memberCreatedTime;
+    }
     @Builder
     public MemberDTO(Long id, String userId, String memberPassword, String memberEmail, String memberName, String memberMobile, String memberAddress, String detailAddress, String extraAddress, String postcode, LocalDateTime memberCreatedTime, LocalDateTime memberUpdatedTime, String accessToken, String url) {
         this.id = id;
@@ -47,15 +57,28 @@ public class MemberDTO {
         return MemberEntity.builder()
                 .id(id)
                 .userId(userId)
-                .memberEmail(memberEmail)
                 .memberPassword(memberPassword)
+                .memberEmail(memberEmail)
                 .memberName(memberName)
                 .memberMobile(memberMobile)
-                .memberAddress(memberAddress)
-                .detailAddress(detailAddress)
-                .extraAddress(extraAddress)
-                .postcode(postcode)
                 .build();
+    }
+
+    public static MemberDTO toDTO(MemberEntity memberEntity) {
+        MemberDTO memberDTO = new MemberDTO();
+        memberDTO.setId(memberEntity.getId());
+        memberDTO.setUserId(memberEntity.getUserId());
+        memberDTO.setMemberEmail(memberEntity.getMemberEmail());
+        memberDTO.setMemberPassword(memberEntity.getMemberPassword());
+        memberDTO.setMemberName(memberEntity.getMemberName());
+        memberDTO.setMemberMobile(memberEntity.getMemberMobile());
+        memberDTO.setMemberAddress(memberEntity.getMemberAddress());
+        memberDTO.setDetailAddress(memberEntity.getDetailAddress());
+        memberDTO.setExtraAddress(memberEntity.getExtraAddress());
+        memberDTO.setPostcode(memberEntity.getPostcode());
+        memberDTO.setMemberCreatedTime(memberEntity.getCreatedTime());
+        memberDTO.setMemberUpdatedTime(memberEntity.getUpdatedTime());
+        return memberDTO;
     }
 }
 

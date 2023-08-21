@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>🎈Find your Base:)-update</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <!--  폰트-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jua&family=Nanum+Gothic&family=Noto+Sans+KR&display=swap"
+          rel="stylesheet">
+
+    <style>
+        * {
+            font-family: 'Jua', sans-serif;
+            font-family: 'Nanum Gothic', sans-serif;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+
+        #item_update_form {
+            width: 600px;
+            height: 409px;
+            left: 411px;
+            top: 85px;
+            /*가운데 정렬 margin: auto*/
+            margin-top: 100px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        label {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body style="background-color: white">
+<th:block th:replace="commonPages/header :: header"></th:block>
+<div class="container" id="item_update_form">
+    <form action="/item/update" method="post" name="updateForm" enctype="multipart/form-data">
+        <input type="hidden" name="id" th:value="${item.id}">
+
+        <div>
+            <label for="itemName">상품명</label>
+            <input type="text" name="itemName" th:value="${item.itemName}" id="itemName" placeholder="상품명"
+                   class="form-control">
+        </div>
+
+        <div class="box1" style="display: inline-block">
+            <label>대표 이미지</label>
+            <div>
+                <img th:src="@{|/upload/${item.storedFileNameItem.get(0)}}" id="preview" width="250" height="270">
+            </div>
+        </div>
+
+        <div style="display: inline-block;float: right; position: relative;">
+            <label for="itemCount">상품수량</label>
+            <input type="text" name="itemCount" th:value="${item.itemCount}" id="itemCount" placeholder="상품수량" class="form-control"
+                   style="width: 100px;">
+        </div>
+
+        <div style="display: inline-block;float: right;">
+            <label for="itemPrice">상품가격</label>
+            <input type="text" name="itemPrice" th:value="${item.itemPrice}" id="itemPrice" placeholder="상품가격"
+                   class="form-control"
+                   style="width: 150px;">
+            <div style="float: right">
+                <div><label for="itemCategory">카테고리</label></div>
+                <select name="itemCategory" th:field="${item.itemCategory}" class="form-select" id="itemCategory"
+                        style="font-size: 12px; width: 200px; height: 35px;">
+                    <option value="small" selected>PC</option>
+                    <option value="middle">컴퓨터부품</option>
+                    <option value="large">주변기기</option>
+                </select>
+            </div>
+        </div>
+
+        <div>
+            <label for="itemContents">상품설명</label>
+            <textarea name="itemContents" id="itemContents" cols="30" rows="10" th:field="${item.itemContents}"
+                      placeholder="상품 설명"
+                      class="form-control"></textarea>
+        </div>
+
+        <input type="hidden" th:value="${item.getStoredFileNameItem()}" name="storedFileNameItem">
+        <input style="display: block;" type="file" name="itemFileUpdate" th:value="${item.storedFileNameItem}"
+               id="inputMultipleImage" multiple onchange="readURL(this)">
+
+        <input type="submit" value="수정 완료" onclick="updateFn()" class="btn btn-success" style="margin-top: 20px">
+
+    </form>
+</div>
+</body>
+
+<script th:inline="javascript">
+    const updateFn = () => {
+        updateForm.submit();
+    }
+
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById("preview").src = e.target.result;
+            };
+            reader.readAsDataURL(input.files[0]);
+        } else {
+            document.getElementById("preview").src = "";
+        }
+    }
+</script>
+
+</html>

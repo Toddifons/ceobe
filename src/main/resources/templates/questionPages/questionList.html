@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>🎈Find your Base:)-고객센터</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <script src="https://kit.fontawesome.com/fe9e42f1d2.js" crossorigin="anonymous"></script>
+
+    <!--  폰트-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jua&family=Nanum+Gothic&family=Noto+Sans+KR&display=swap"
+          rel="stylesheet">
+    <style>
+        *{
+            font-family: 'Jua', sans-serif;
+            font-family: 'Nanum Gothic', sans-serif;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        span{
+            color: seagreen;
+        }
+        .pagination>.active>a,
+        .pagination>.active>a:focus,
+        .pagination>.active>a:hover,
+        .pagination>.active>span,
+        .pagination>.active>span:focus,
+        .pagination>.active>span:hover {
+            /*css 우선순위 강제적용*/
+            background-color: seagreen !important;
+            border-color: seagreen !important;
+        }
+    </style>
+</head>
+<body style="background-color: white">
+<div th:if="${session.member?.userId == 'admin'}">
+    <th:block th:replace="commonPages/sidebar :: sidebar"></th:block>
+</div>
+<div th:unless="${session.member?.userId == 'admin'}">
+    <th:block th:replace="commonPages/header :: header"></th:block>
+</div>
+<div class="container" id="question-list">
+    <table class="table table-striped table-hover text-center" th:if="${message} != 'null'">
+        <tr>
+            <th style="text-align: center">번호</th>
+            <th style="text-align: center">제목</th>
+            <th style="text-align: center">작성자</th>
+            <th style="text-align: center; width: 116px;">날짜</th>
+            <th style="text-align: center; width: 116px;">답변여부</th>
+        </tr>
+        <tr style="text-align: center" th:each="question: ${questionList}">
+            <td th:text="${question.id}"></td>
+            <td>
+                <div th:if="${session.member != null}">
+                    <a th:if="${session.member.userId == 'admin' or question.questionName == session.member.userId }" th:href="@{|/question/${question.id}|}" th:text="${question.questionTitle}"></a>
+                    <i th:unless="${session.member.userId == 'admin' or question.questionName == session.member.userId }" class="fa-solid fa-lock">비밀글입니다.</i>
+                </div>
+                <div th:unless="${session.member != null}">
+                    <i class="fa-solid fa-lock">비밀글입니다.</i>
+                </div>
+            </td>
+            <td th:text="${question.questionName}"></td>
+            <td th:text="*{#temporals.format(question.getQuestionCreatedTime(), 'yyyy-MM-dd')}"></td>
+            <td th:text="${question.questionStatus}"></td>
+        </tr>
+    </table>
+    <div class="wrap" style="float: right">
+        <div class="search">
+            <!-- 부트스트랩 검색창 -->
+            <form class="navbar-form navbar-left" role="search">
+                <div class="form-group">
+                    <select class="form-control" id="searchType">
+                        <option th:selected="${category} == 'questionTitle'" value="questionTitle" > 제목</option>
+                        <option th:selected="${category} == 'questionWriter'" value="questionWriter">작성자</option>
+                        <option th:selected="${category} == 'questionContents'" value="questionContents">내용</option>
+                    </select>
+                    <input type="text" class="form-control" placeholder="Search" id="searchQ" th:value="${search}" name="search">
+                    <input type="button" value="검색" class="form-control" onclick="searchList()">
+
+                </div>
+            </form>
+        </div>
+    </div>
+    <a style="float: left; margin-top: 20px" href="/question/save" role="button" class="btn btn-success">문의하기</a>
+
+</div>
+
+<div th:if="${message} != 'null'"  class="container" style="text-align: center">
+    <ul class="pagination justify-content-center">
+        <li class="page-item">
+            <!--첫페이지 요청 링크-->
+            <a class="page-link" th:href="@{/question/list(page=1 ,sort=${sort} , size=${size},search=${search},category=${category})}">
+                <span>First</span>
+            </a>
+        </li>
+
+        <li th:class="${questionList.first} ? 'disabled'" class="page-item">
+            <!--boardList.first: isFirst()
+                boardList.number: getNumber()-->
+            <a class="page-link"
+               th:href="${questionList.first} ? '#' : @{/question/list(page=${questionList.number},sort=${sort},size=${size},search=${search},category=${category})}">
+                <span><</span> <!-- < -->
+            </a>
+        </li>
+
+        <!-- startPage ~ endPage 까지 숫자를 만들어주는 역할 -->
+        <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
+            th:class="${page == questionList.number + 1} ? 'page-item active'" class="page-item">
+            <a th:if="${page != 0}" class="page-link" th:text="${page}"
+               th:href="@{/question/list(page=${page},sort=${sort},size=${size},search=${search},category=${category})}"></a>
+        </li>
+
+        <!-- 다음 페이지 요청
+            현재 3페이지를 보고 있다면 다음 페이지는 4페이지임.
+            getNumber() 값은 2임.
+            따라서 4페이지를 보고 싶다면 getNumber()+2를 해야 컨트롤러에 4를 요청할 수 있음. -->
+        <li th:class="${questionList.last} ? 'disabled'">
+            <a class="page-link"
+               th:href="${questionList.last} ? '#' : @{/question/list(page=${questionList.number + 2},sort=${sort},size=${size},search=${search},category=${category})}">
+                <span>&gt;</span>
+            </a>
+        </li>
+
+        <li class="page-item" th:class="${questionList.last} ? 'disabled'">
+            <a class="page-link" th:href="@{/question/list(page=${questionList.totalPages},sort=${sort},size=${size},search=${search},category=${category})}">
+                <span>Last</span>
+            </a>
+        </li>
+    </ul>
+</div>
+</body>
+<script th:inline="javascript">
+    const searchList = () => {
+        const Type = document.getElementById("searchType")
+        const category = Type.options[Type.selectedIndex].value;
+        const search = document.getElementById("searchQ").value;
+        location.href = "/question/list?category="+category+"&search="+search;
+    }
+
+</script>
+</html>

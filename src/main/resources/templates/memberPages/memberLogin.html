@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>🎈Find your Base:)-로그인</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!--    카카오 로그인 api-->
+    <script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/login.css}">
+    <axios cdn="https://unpkg.com/axios/dist/axios.min.js"></axios>
+</head>
+<body>
+<div>
+    <article class="inner_login">
+        <div class="login_tistory">
+            <h2 class="page_title">LOGIN</h2>
+            <input type="hidden" name="redirectURL" th:value="${redirectURL}">
+            <fieldset>
+                <legend class="screen_out">로그인 정보 입력폼</legend>
+                <div class="box_login">
+                    <div class="inp_text">
+                        <label for="userId" class="screen_out">아이디</label>
+                        <input type="text" name="userId" placeholder="아이디" id="userId">
+                    </div>
+                    <div class="inp_text">
+                        <label for="pass" class="screen_out">비밀번호</label>
+                        <input type="password" name="memberPassword" placeholder="비밀번호" id="pass">
+                    </div>
+                </div>
+                <button style="text-align: center" type="button" onclick="memberLogin()" class="btn_login">로그인</button>
+            </fieldset>
+        </div>
+
+        <section>
+            <a id="kakao-login-btn" role="button" class="btn">
+                <img src="//k.kakaocdn.net/14/dn/btqbjxsO6vP/KPiGpdnsubSq3a0PHEGUK1/o.jpg" width="200px" height="40px"
+                     style="width: 420px;"/>
+            </a>
+        </section>
+        <div>
+            <p class="mt-5">회원이 아니신가요? <a href="/member/save" class="btn-dark" style="font-weight: bold;">가입하기</a></p>
+            <p class="mt-5">비밀번호를 잊으셨나요? <a href="/member/searchPassword" class="btn-dark" style="font-weight: bold;">비밀번호 찾기</a></p>
+        </div>
+    </article>
+    <article class="join">
+        <h1>회원가입</h1>
+    </article>
+</div>
+
+</body>
+
+<script th:inline="javascript">
+    $('#userId, #pass').on('keydown', function(e){
+        if (e.code == 'Enter'){
+            $('.btn_login').click()
+        }
+    })
+
+    const memberLogin = () => {
+        const email = document.getElementById("userId").value;
+        const pw = document.getElementById("pass").value;
+        const url = [[${redirectURL}]];
+
+        $.ajax({
+            type: "post",
+            url: "/member/login",
+            data: {
+                UserId: email,
+                memberPassword: pw
+            },
+            dataType: "text",
+            success: function (result) {
+                if (result == "ok") {
+                    // alert("로그인성공")
+                    location.href = "/member/login2?redirectURL=" + url;
+                    // window.location.replace('url');
+                } else {
+                    alert("아이디 또는 비밀번호를 다시 확인해주세요")
+                }
+            },
+            error: function () {
+                alert("아이디 또는 비밀번호를 다시 확인해주세요")
+            }
+        })
+    }
+    //카카로 로그인 javascript
+    //0. init 안에 앱 키 중 'javascript 키' 넣기
+    Kakao.init('278e677004746c3d93c21657a06997eb');
+    $("#kakao-login-btn").on("click", function () {
+        const url = [[${redirectURL}]];
+        //1. 로그인 시도
+        Kakao.Auth.login({
+            success: function (authObj) {
+                //2. 로그인 성공시, API 호출
+                Kakao.API.request({
+                    url: '/v2/user/me',
+                    success: function (res) {
+                        console.log(res);
+                        console.log(res.access_token);
+                        const memberEmail = res.kakao_account.email;
+                        const userId = res.id;
+                        const memberName = res.properties.nickname;
+                        var accessToken = authObj.access_token;
+                        //scope: 카카오 로그인 동의항목
+                        scopes : ['account_email', 'profile_nickname'];
+                        // alert("로그인 성공")
+                        kakao(userId, memberEmail, memberName, accessToken , url);
+                    }
+                })
+                console.log(authObj);
+                var token = authObj.access_token;
+            },
+            fail: function (err) {
+                alert(JSON.stringify(err));
+            }
+        });
+
+    })
+
+    function kakao(userId, memberEmail, memberName, accessToken , url) {
+        let f = document.createElement('form');
+
+        let obj;
+        obj = document.createElement('input');
+        obj.setAttribute('type', 'hidden');
+        obj.setAttribute('name', 'userId');
+        obj.setAttribute('value', userId);
+
+
+        let obj2;
+        obj2 = document.createElement('input');
+        obj2.setAttribute('type', 'hidden');
+        obj2.setAttribute('name', 'memberEmail');
+        obj2.setAttribute('value', memberEmail);
+
+
+        let obj3;
+        obj3 = document.createElement('input');
+        obj3.setAttribute('type', 'hidden');
+        obj3.setAttribute('name', 'memberName');
+        obj3.setAttribute('value', memberName);
+
+        let obj4;
+        obj4 = document.createElement('input');
+        obj4.setAttribute('type', 'hidden');
+        obj4.setAttribute('name', 'accessToken');
+        obj4.setAttribute('value', accessToken);
+
+        let obj5;
+        obj5 = document.createElement('input');
+        obj5.setAttribute('type', 'hidden');
+        obj5.setAttribute('name', 'url');
+        obj5.setAttribute('value', url);
+
+
+
+
+        f.append(obj);
+        f.append(obj2);
+        f.append(obj3);
+        f.append(obj4);
+        f.append(obj5);
+        f.setAttribute('method', 'post');
+        f.setAttribute('action', '/member/kakao');
+        document.body.append(f);
+        f.submit();
+    }
+
+
+</script>
+</html>

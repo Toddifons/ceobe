@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>🎈Find your Base:)-회원목록입니다.</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <!--  //시간설정-->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <!--  폰트-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jua&family=Nanum+Gothic&family=Noto+Sans+KR&display=swap"
+          rel="stylesheet">
+    <style>
+        *{
+            font-family: 'Jua', sans-serif;
+            font-family: 'Nanum Gothic', sans-serif;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        span{
+            color: seagreen;
+        }
+        .pagination>.active>a,
+        .pagination>.active>a:focus,
+        .pagination>.active>a:hover,
+        .pagination>.active>span,
+        .pagination>.active>span:focus,
+        .pagination>.active>span:hover {
+            /*css 우선순위 강제적용*/
+            background-color: seagreen !important;
+            border-color: seagreen !important;
+        }
+    </style>
+</head>
+<body style="background-color: white">
+<th:block th:replace="commonPages/sidebar :: sidebar"></th:block>
+<div class="container">
+    <table class="class="table table-striped table-hover text-center mt-5">
+    <tr>
+        <th style="text-align: center">번호</th>
+        <th style="text-align: center">아이디</th>
+        <th style="text-align: center">이메일</th>
+        <th style="text-align: center">이름</th>
+        <th style="text-align: center">전화번호</th>
+        <th style="text-align: center">가입일자</th>
+        <th style="text-align: center">상세조회</th>
+    </tr>
+    <tr th:each="member: ${memberList}">
+        <td th:text="${member.id}"></td>
+        <td th:text="${member.userId}"></td>
+        <td th:text="${member.memberEmail}"></td>
+        <td th:text="${member.memberName}"></td>
+        <td th:text="${member.memberMobile}"></td>
+        <td th:text="*{#temporals.format(member.memberCreatedTime,'yyyy-MM-dd HH:mm:ss')}"></td>
+        <td><a th:href="@{|/member/${member.id}|}">상세조회</a></td>
+    </tr>
+    </table>
+</div>
+<div class="container" style="text-align: center">
+    <ul class="pagination justify-content-center">
+        <li class="page-item">
+            <!--첫페이지 요청 링크 /board?page=1-->
+            <a class="page-link" th:href="@{/member/list(page=1)}">
+                <span>First</span>
+            </a>
+        </li>
+        <li th:class="${memberList.first} ? 'disabled'" class="page-item">
+            <!--boardList.first: isFirst()
+                boardList.number: getNumber()-->
+            <a class="page-link" th:href="${memberList.first} ? '#' : @{/member/list(page=${memberList.number})}">
+                <!-- 사용자 3페이지, number 2 /board?page=2-->
+                <span><</span> <!-- < -->
+            </a>
+        </li>
+
+        <!-- startPage ~ endPage 까지 숫자를 만들어주는 역할 -->
+        <!--for(int page=startPage; page<=endPage; page++)-->
+        <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
+            th:class="${page == memberList.number + 1} ? 'page-item active'" class="page-item">
+            <a class="page-link" th:text="${page}" th:href="@{/member/list(page=${page})}"></a>
+        </li>
+
+        <!-- 다음 페이지 요청
+            현재 3페이지를 보고 있다면 다음 페이지는 4페이지임.
+            getNumber() 값은 2임.
+            따라서 4페이지를 보고 싶다면 getNumber()+2를 해야 컨트롤러에 4를 요청할 수 있음. -->
+        <li th:class="${memberList.last} ? 'disabled'">
+            <a class="page-link" th:href="${memberList.last} ? '#' : @{/member/list(page=${memberList.number + 2})}">
+                <span>&gt;</span>
+            </a>
+        </li>
+
+        <li class="page-item">
+            <!--마지막페이지 요청 링크-->
+            <a class="page-link" th:href="@{/member/list(page=${memberList.totalPages})}">
+                <span>Last</span>
+            </a>
+        </li>
+    </ul>
+</div>
+
+</body>
+</html>

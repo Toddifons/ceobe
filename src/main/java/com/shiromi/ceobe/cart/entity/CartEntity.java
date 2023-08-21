@@ -1,7 +1,7 @@
 package com.shiromi.ceobe.cart.entity;
 
 import com.shiromi.ceobe.cartItem.entity.CartItemEntity;
-import com.shiromi.ceobe.common.entity.BaseEntity;
+import com.shiromi.common.entity.BaseEntity;
 import com.shiromi.ceobe.member.entity.MemberEntity;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,10 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "cart_table")
 public class CartEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "cart_id")
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
