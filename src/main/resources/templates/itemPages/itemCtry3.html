@@ -44,7 +44,7 @@
 </nav>
 
 <!-- 상품등록 링크 -->
-<div class="container" id="productSaveForm" th:if="${session.member.role.toString().equals('ADMIN')}">
+<div class="container" id="productSaveForm" th:if="${session.member != null and session.member.role.toString().equals('ADMIN')}">
   <a href="/item/save">상품등록</a>
 </div>
 
@@ -79,7 +79,7 @@
                     </div>
                   </div>
                   <!-- 상품 수정 및 삭제 버튼 -->
-                  <div th:if="${session.member.role.toString().equals('ADMIN')}">
+                  <div th:if="${session.member != null and session.member.role.toString().equals('ADMIN')}">
                     <button th:onclick="updateReq([[${item}]])" class="btn btn-outline-secondary btn-sm">상품 수정</button>
                     <button th:onclick="deleteReq([[${item}]])" class="btn btn-outline-secondary btn-sm">상품 삭제</button>
                   </div>
@@ -112,7 +112,7 @@
         <li th:each="page: ${#numbers.sequence(startPage, endPage)}"
             th:class="${page == itemList.number + 1} ? 'page-item active'" class="page-item">
           <a class="page-link" th:text="${page}"
-             th:href="@{/item/main(page=${page},sort=${sort},size=${size},search=${search},category=${category})}"></a>
+             th:href="@{/item/category3(page=${page},sort=${sort},size=${size},search=${search},category=${category})}"></a>
         </li>
       </ul>
     </div>

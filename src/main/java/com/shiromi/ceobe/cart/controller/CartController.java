@@ -5,10 +5,7 @@ import com.shiromi.ceobe.cart.service.CartService;
 import com.shiromi.ceobe.cartItem.dto.CartItemDTO;
 import com.shiromi.ceobe.item.dto.*;
 import com.shiromi.ceobe.member.dto.MemberDTO;
-import com.shiromi.ceobe.member.entity.MemberEntity;
-import com.shiromi.config.auth.PrincipalDetails;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +15,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-import java.net.HttpCookie;
 import java.util.List;
 
 
@@ -29,23 +25,14 @@ public class CartController {
 
     private final CartService cartService;
 
-    //== 기존 코드 ==//
-//    @GetMapping("/saved")
-//    public @ResponseBody String cartSave(@ModelAttribute ItemDTO itemDTO , HttpSession session){
-//        Object member = session.getAttribute("member");
-//        member = (MemberDTO) member;
-//        String userId = ((MemberDTO) member).getUserId();
-//        itemDTO.setUserId(userId);
-//        System.out.println("장바구니저장itemDTO = " + itemDTO);
-//        //cartService.save(itemDTO);
-//        return userId;
-//    }
-
-    //== 장바구니 저장 ==//
-    //== 리팩토링 예시, 아래와 같이 간단하게 ==//
     @GetMapping("/saved")
-    public @ResponseBody String cartSave(@ModelAttribute ItemDTO itemDTO , @AuthenticationPrincipal PrincipalDetails principalDetails){
-        String userId = cartService.save(itemDTO, principalDetails.getMemberEntity());
+    public @ResponseBody String cartSave(@ModelAttribute ItemDTO itemDTO ,HttpSession session){
+        Object member = session.getAttribute("member");
+        member = (MemberDTO) member;
+        String userId = ((MemberDTO) member).getUserId();
+        itemDTO.setUserId(userId);
+        System.out.println("장바구니저장itemDTO = " + itemDTO);
+        cartService.save(itemDTO);
         return userId;
     }
 
@@ -71,14 +58,6 @@ public class CartController {
         cartService.delete(id);
         return "success";
     }
-
-    //장바구니 수정
-//    @GetMapping("/update")
-//    public String update(@ModelAttribute CartDTO cartDTO){
-//        System.out.println("cartDTO = " + cartDTO);
-//        cartService.update(cartDTO);
-//        return "redirect:/cart/list?userId="+cartDTO.getUserId();
-//    }
 
     //장바구니 수량변경 ajax
     @GetMapping("/change")

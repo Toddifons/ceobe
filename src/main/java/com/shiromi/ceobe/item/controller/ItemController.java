@@ -1,5 +1,6 @@
 package com.shiromi.ceobe.item.controller;
 
+import com.shiromi.ceobe.comment.dto.CommentDTO;
 import com.shiromi.ceobe.comment.service.CommentService;
 import com.shiromi.ceobe.item.dto.ItemDTO;
 import com.shiromi.ceobe.item.service.ItemService;
@@ -50,7 +51,18 @@ public class ItemController {
                            @RequestParam("itemId") Long itemId, Model model){
         log.info("itemId : {} ", itemId);
         model.addAttribute("item", itemService.findById(itemId));
-        model.addAttribute("commentListPage",commentService.findAll(itemId,pageable));
+        Page<CommentDTO> commentDTOList = commentService.findAll(itemId,pageable);
+        if (!commentDTOList.isEmpty()) {
+            model.addAttribute("commentList", commentDTOList);
+            int blockLimit = 3;
+            int startPage = (((int)(Math.ceil((double)pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1;
+            int endPage = ((startPage + blockLimit - 1) < commentDTOList.getTotalPages()) ? startPage + blockLimit - 1 : commentDTOList.getTotalPages();
+            model.addAttribute("startPage", startPage);
+            model.addAttribute("endPage", endPage);
+            model.addAttribute("itemId",itemId);
+        }else {
+            model.addAttribute("commentList", "empty");
+        }
         return "itemPages/itemDetail";
     }
 

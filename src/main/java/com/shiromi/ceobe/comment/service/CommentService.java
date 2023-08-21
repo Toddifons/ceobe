@@ -27,7 +27,6 @@ import java.util.*;
 public class CommentService {
     private final CommentRepository commentRepository;
     private final ItemRepository itemRepository;
-    private final MemberRepository memberRepository;
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
 
@@ -43,7 +42,7 @@ public class CommentService {
     }
 
     @Transactional
-    public Map<String,Object> findAll(Long itemId, Pageable pageable) {
+    public Page<CommentDTO> findAll(Long itemId, Pageable pageable) {
         int page = pageable.getPageNumber() - 1;
         final int pageLimit = 5;
         ItemEntity itemEntity = itemRepository.findById(itemId).get();
@@ -56,14 +55,8 @@ public class CommentService {
                         comment.getCreatedTime(),
                         comment.getStarCount()
                 ));
-        return listPaging(pageable,commentDTOPage,itemId);
-//        ItemEntity itemEntity = itemRepository.findById(itemId).get();
-//        List<CommentEntity> commentEntities = itemEntity.getCommentEntityList();
-//        List<CommentDTO> commentDTOList = new ArrayList<>();
-//        for(CommentEntity commentEntity : commentEntities){
-//            commentDTOList.add(CommentDTO.toCommentDTO(commentEntity));
-//        }
-//        return commentDTOList;
+        return commentDTOPage;
+
     }
 
     public List<CommentDTO> list() {

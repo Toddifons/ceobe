@@ -59,6 +59,7 @@ public class OrderController {
         int itemPriceTotal=cartItemDTOList.get(0).getItemPriceTotal();
         model.addAttribute("cartList",cartItemDTOList);
         model.addAttribute("itemPriceTotal",itemPriceTotal);
+//        model.addAttribute("item",itemDTO);
 
         return "orderPages/orderSave2";
     }

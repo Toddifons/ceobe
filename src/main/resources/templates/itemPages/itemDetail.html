@@ -21,7 +21,8 @@
 <body style="background-color: white">
 <th:block th:replace="commonPages/header :: header"></th:block>
 
-<form action="#" method="get" id="loc" class="image-form">
+
+<form action="#" method="get" id="loc" class="container">
     <div th:if="${item.fileAttachedItem == 1}" class="image-form">
         <!--                <th>파일</th>-->
         <div>
@@ -43,6 +44,13 @@
             <h2 id="itemName" th:text="${item.itemName}"></h2>
         </div>
         <div>
+            <label style="margin-right: 65px">가격</label>
+            <input type="hidden" name="itemPrice" th:value="${item.itemPrice}">
+            <p th:text="${#numbers.formatInteger(item.itemPrice,0,'COMMA')}+'원'" class="price-form text-form"></p>
+            <!--            <p th:text="${item.itemPrice}+'원'" class="price-form text-form"></p>-->
+        </div>
+        <div>
+
             <div th:if="${item.itemCount == 0}">
                 <label style="margin-right: 40px">구매수량</label>
                 <p style="color: red; font-weight: bold;">품절</p>
@@ -64,6 +72,7 @@
             <!--            <div style="color: seagreen ; font-size:xx-large ; font-weight: bold" id="totalPrice" class="text-form" th:text="${item.itemPrice}+'원'"></div>-->
         </div>
 
+
         <div th:if="${session.member} != null">
             <div th:if="${item.itemCount != 0}">
                 <input type="button" class="btn btn-outline-dark" value="장바구니" onclick="cart()" style="float: left">
@@ -80,17 +89,20 @@
         </div>
     </div>
 </form>
+<!--        </div>-->
+<!--</div>-->
 
 <div style="text-align: center; margin-top: 80px; margin-bottom: 160px">
     <!--                <th>설명</th>-->
     <div style="white-space:pre;" th:text="${item.itemContents}"></div>
 </div>
 
-<div class="container mt-5" id="comment-list" th:object="${commentListPage}">
-    <div th:if="*{commentList == 'empty'}">
+
+<div class="container mt-5" id="comment-list">
+    <div th:if="${commentList == 'empty'}">
         <p>작성된 후기가 없습니다.</p>
     </div>
-    <div th:unless="*{commentList == 'empty'}">
+    <div th:unless="${commentList == 'empty'}">
         <table class="table">
             <tr>
                 <th style="padding-left: 200px;">주문후기</th>
@@ -98,7 +110,7 @@
                 <th style="width: 216px;">작성시간</th>
                 <th style="width: 116px;">별점</th>
             </tr>
-            <tr th:each="comment: *{commentList}">
+            <tr th:each="comment: ${commentList}">
                 <input type="hidden" th:value="${comment.id}" name="commentId">
                 <td th:text="${comment.commentContents}" style="padding-left: 30px;"></td>
                 <td th:text="${comment.commentWriter}" class="comment-font"></td>
@@ -110,8 +122,8 @@
                     </div>
                 </td>
                 <td>
-                    <button th:if="${session.member.userId == comment.commentWriter}" class="btn btn-outline-dark" th:onclick="commentUpdate([[${comment.id}]])">수정</button>
-                    <button th:if="${session.member.userId == comment.commentWriter}" class="btn btn-outline-dark" th:onclick="commentDelete([[${comment}]])">삭제</button>
+                    <button th:if="${session.member != null and session.member.userId.toString().equals(comment.commentWriter)}" class="btn btn-outline-dark" th:onclick="commentUpdate([[${comment.id}]])">수정</button>
+                    <button th:if="${session.member != null and session.member.userId.toString().equals(comment.commentWriter)}" class="btn btn-outline-dark" th:onclick="commentDelete([[${comment}]])">삭제</button>
                 </td>
             </tr>
         </table>
@@ -123,11 +135,12 @@
                         <span>First</span>
                     </a>
                 </li>
-                <li th:class="*{commentList.first} ? 'disabled'" class="page-item">
+
+                <li th:class="${commentList.first} ? 'disabled'" class="page-item">
                     <!--boardList.first: isFirst()
                         boardList.number: getNumber()-->
                     <a class="page-link"
-                       th:href="*{commentList.first} ? '#' : @{/item/(page=*{commentList.number},itemId=${itemId})}">
+                       th:href="${commentList.first} ? '#' : @{/item/(page=${commentList.number},itemId=${itemId})}">
                         <!-- 사용자 3페이지, number 2 /board?page=2-->
                         <span><</span> <!-- < -->
                     </a>
@@ -144,22 +157,23 @@
                     현재 3페이지를 보고 있다면 다음 페이지는 4페이지임.
                     getNumber() 값은 2임.
                     따라서 4페이지를 보고 싶다면 getNumber()+2를 해야 컨트롤러에 4를 요청할 수 있음. -->
-                <li th:class="*{commentList.last} ? 'disabled'">
+                <li th:class="${commentList.last} ? 'disabled'">
                     <a class="page-link"
-                       th:href="*{commentList.last} ? '#' : @{/item/(page=*{commentList.number + 2},itemId=${itemId})}">
+                       th:href="${commentList.last} ? '#' : @{/item/(page=${commentList.number + 2},itemId=${itemId})}">
                         <span>&gt;</span>
                     </a>
                 </li>
 
                 <li class="page-item">
                     <!--마지막페이지 요청 링크-->
-                    <a class="page-link" th:href="@{/item/(page=*{commentList.totalPages},itemId=${itemId})}">
+                    <a class="page-link" th:href="@{/item/(page=${commentList.totalPages},itemId=${itemId})}">
                         <span>Last</span>
                     </a>
                 </li>
             </ul>
         </div>
     </div>
+</div>
 </div>
 <div id="comment-page">
 
@@ -288,5 +302,4 @@
 
 
 </script>
-
 </html>
