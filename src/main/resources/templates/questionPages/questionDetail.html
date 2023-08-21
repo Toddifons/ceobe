@@ -74,7 +74,7 @@
                     <textarea class="form-control" rows="5" th:text="${question.questionContents}" readonly></textarea>
                 </div>
 <!--                관리자일때 보이는 기능-->
-                <div th:if="${session.member != null and session.member.role.equals('ADMIN')}">
+                <div th:if="${session.member != null and session.member.role.toString().equals('ADMIN')}">
                     <input id="replyContents" type="text" value="" name="replyContents" class="form-control" style="display: inline" placeholder="답변내용">
                     <button type="button" class="btn btn-warning" style="display: inline; margin-top: 10px" onclick="reply()">답변 작성</button>
                     <button type="button" class="btn btn-default" style="float:right ; display: inline; margin-top: 10px" onclick="questionList()">목록</button>
@@ -111,7 +111,7 @@
                 <td th:text="${reply.replyContents}"></td>
                 <td th:text="*{#temporals.format(reply.replyDate,'yyyy-MM-dd HH:mm:ss')}"></td>
                 <td>
-                    <button th:if="${session.member != null and session.member.role.equals('ADMIN')}" class="btn btn-outline-dark" th:onclick="replyDelete([[${reply}]])">삭제</button>
+                    <button th:if="${session.member != null and session.member.role.toString().equals('ADMIN')}" class="btn btn-outline-dark" th:onclick="replyDelete([[${reply}]])">삭제</button>
                 </td>
             </tr>
         </table>

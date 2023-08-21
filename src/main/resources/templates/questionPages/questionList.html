@@ -34,10 +34,10 @@
 </head>
 <body style="background-color: white">
 <body style="background-color: white">
-<div th:if="${session.member != null and session.member.role == 'ADMIN'}">
+<div th:if="${session.member != null and session.member.role.toString().equals('ADMIN')}">
     <th:block th:replace="commonPages/sidebar :: sidebar"></th:block>
 </div>
-<div th:unless="${session.member != null and session.member.role == 'ADMIN'}">
+<div th:unless="${session.member != null and session.member.role.toString().equals('ADMIN')}">
     <th:block th:replace="commonPages/header :: header"></th:block>
 </div>
 </body>
@@ -54,8 +54,8 @@
             <td th:text="${question.id}"></td>
             <td>
                 <div th:if="${session.member != null}">
-                    <a th:if="${session.member.role == 'ADMIN' or question.questionName == session.member.userId}" th:href="@{|/question/${question.id}|}" th:text="${question.questionTitle}"></a>
-                    <i th:unless="${session.member.role == 'ADMIN' or question.questionName == session.member.userId}" class="fa-solid fa-lock">비밀글입니다.</i>
+                    <a th:if="${session.member.role.toString().equals('ADMIN') or question.questionName == session.member.userId}" th:href="@{|/question/${question.id}|}" th:text="${question.questionTitle}"></a>
+                    <i th:unless="${session.member.role.toString().equals('ADMIN') or question.questionName == session.member.userId}" class="fa-solid fa-lock">비밀글입니다.</i>
                 </div>
                 <div th:unless="${session.member != null}">
                     <i class="fa-solid fa-lock">비밀글입니다.</i>

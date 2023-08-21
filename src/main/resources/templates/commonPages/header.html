@@ -55,7 +55,7 @@
                             </li>
                             <li><a th:href="@{/cart/list(userId=${session.member.userId})}">장바구니</a></li>
                             <li><a href="/question/list">고객센터</a></li>
-                            <li th:if="${session.member.userId.toString().equals('admin')}" ><a href="/member/admin">관리자페이지</a></li>
+                            <li th:if="${session.member.role.toString().equals('ADMIN')}" ><a href="/member/admin">관리자페이지</a></li>
                         </div>
 
                         <div th:unless="${session.member}">
