@@ -32,7 +32,7 @@ public class ItemEntity extends BaseEntity {
     @Column(nullable = false)
     private int itemPrice;
 
-    @Column(length = 500)
+    @Column(length = 1000)
     private String itemContents;
 
     @Column

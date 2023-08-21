@@ -91,7 +91,7 @@ public class ItemController {
     //리팩토링 1순위
     //카테고리별로 띄우기
     @GetMapping("/item/category1")
-    public String findSmall(@PageableDefault(page = 1,size = 5)Pageable pageable, Model model ,
+    public String findSmall(@PageableDefault(page = 1,size = 12)Pageable pageable, Model model ,
                             @RequestParam(required = false , value = "sort", defaultValue = "id") String sort,
                             @RequestParam(required = false , value = "search", defaultValue = "") String search,
                             @RequestParam(required = false , value = "category", defaultValue = "") String category){
@@ -114,7 +114,7 @@ public class ItemController {
     }
 
     @GetMapping("/item/category2")
-    public String findMedium(@PageableDefault(page = 1,size = 5)Pageable pageable, Model model ,
+    public String findMedium(@PageableDefault(page = 1,size = 12)Pageable pageable, Model model ,
                              @RequestParam(required = false , value = "sort", defaultValue = "id") String sort,
                              @RequestParam(required = false , value = "search", defaultValue = "") String search,
                              @RequestParam(required = false , value = "category", defaultValue = "") String category) {
@@ -138,7 +138,7 @@ public class ItemController {
     }
 
     @GetMapping("/item/category3")
-    public String findLarge(@PageableDefault(page = 1,size = 5)Pageable pageable, Model model ,
+    public String findLarge(@PageableDefault(page = 1,size = 12)Pageable pageable, Model model ,
                             @RequestParam(required = false , value = "sort", defaultValue = "id") String sort,
                             @RequestParam(required = false , value = "search", defaultValue = "") String search,
                             @RequestParam(required = false , value = "category", defaultValue = "") String category){
