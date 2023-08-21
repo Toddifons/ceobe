@@ -42,7 +42,7 @@ public class MemberController {
     //회원가입 처리
     @PostMapping("/save")
     public String save(@ModelAttribute MemberDTO memberDTO) {
-        memberService.save(memberDTO);
+        memberService.saveKakao(memberDTO);
         return "redirect:/";
     }
 

@@ -23,62 +23,62 @@ public class SecurityConfig {
         return http.csrf(csrf -> csrf.disable())
                 .httpBasic(httpBasic -> httpBasic.disable())
                 .authorizeHttpRequests(authorize -> authorize
-                        .antMatchers("/", "/member/**", "/img/**","/css/**","/js/**","/jsp/**", "/style/**").permitAll()
-                        .antMatchers("/cart/list", "/item/main","/item/category1", "/item/category2", "/item/category3",
-                                "/member/save", "/member/duplicate-check-userId", "/member/login",
-                                "/member/auth/login", "/member/logout", "/member/logout2", "/member/mailConfirm",
-                                "/member/searchPassword", "/member/searchPasswordUpdate").permitAll()
-
-                        //== USER & ADMIN ==//
-                        .antMatchers("/cart/saved",
-                                "/cart/{id}",
-                                "/cart/delete",
-                                "/cart/change",
-                                "/comment/save",
-                                "/comment/update",
-                                "/comment/delete",
-                                "/item/save",
-                                "/item/update",
-                                "/item/delete",
-                                "/items",
-                                "/item/",
-                                "/member/password",
-                                "/member/update",
-                                "/order/save",
-                                "/order/save2",
-                                "/order/cart3",
-                                "/order/cart2",
-                                "/order/list",
-                                "/question/list",
-                                "/reply/save",
-                                "/reply/delete"
-                        ).hasAnyRole("USER", "ADMIN")
-
-                        //== Only ADMIN ==//
-                        .antMatchers("/member/admin",
-                                "/member/list",
-                                "/member/{id}",
-                                "/member/password",
-                                "/member/update",
-                                "/member/searchPassword",
-                                "/member/searchPasswordUpdate",
-                                "/order/listAll",
-                                "/order/status",
-                                "/order/cancel",
-                                "/question/save",
-                                "/question",
-                                "/question/update/{id}",
-                                "/question/update",
-                                "/question/delete/{id}"
-
-                        ).hasRole("ADMIN")
+//                        .antMatchers("/", "/member/**", "/img/**","/css/**","/js/**","/jsp/**", "/style/**").permitAll()
+//                        .antMatchers("/cart/list", "/item/main","/item/category1", "/item/category2", "/item/category3",
+//                                "/member/save", "/member/duplicate-check-userId", "/member/login",
+//                                "/member/auth/login", "/member/logout", "/member/logout2", "/member/mailConfirm",
+//                                "/member/searchPassword", "/member/searchPasswordUpdate").permitAll()
+//
+//                        //== USER & ADMIN ==//
+//                        .antMatchers("/cart/saved",
+//                                "/cart/{id}",
+//                                "/cart/delete",
+//                                "/cart/change",
+//                                "/comment/save",
+//                                "/comment/update",
+//                                "/comment/delete",
+//                                "/item/save",
+//                                "/item/update",
+//                                "/item/delete",
+//                                "/items",
+//                                "/item/",
+//                                "/member/password",
+//                                "/member/update",
+//                                "/order/save",
+//                                "/order/save2",
+//                                "/order/cart3",
+//                                "/order/cart2",
+//                                "/order/list",
+//                                "/question/list",
+//                                "/reply/save",
+//                                "/reply/delete"
+//                        ).hasAnyRole("USER", "ADMIN")
+//
+//                        //== Only ADMIN ==//
+//                        .antMatchers("/member/admin",
+//                                "/member/list",
+//                                "/member/{id}",
+//                                "/member/password",
+//                                "/member/update",
+//                                "/member/searchPassword",
+//                                "/member/searchPasswordUpdate",
+//                                "/order/listAll",
+//                                "/order/status",
+//                                "/order/cancel",
+//                                "/question/save",
+//                                "/question",
+//                                "/question/update/{id}",
+//                                "/question/update",
+//                                "/question/delete/{id}"
+//
+//                        ).hasRole("ADMIN")
 
                         /* //== ALL ==//
                         .antMatchers("/cart/list", "/item/category1", "/item/category2", "/item/category3",
                                 "/member/save", "/member/duplicate-check-userId", "/member/login",
                                 "/member/auth/login", "/member/logout", "/member/logout2", "/member/mailConfirm",
                                 "/member/searchPassword", "/member/searchPasswordUpdate").permitAll()*/
-                        .anyRequest().authenticated())
+                        .anyRequest().permitAll())
 
                 .formLogin(formLogin -> formLogin.loginPage("/member/login")
                         .defaultSuccessUrl("/"))

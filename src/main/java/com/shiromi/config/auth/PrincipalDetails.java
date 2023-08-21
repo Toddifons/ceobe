@@ -28,7 +28,7 @@ public class PrincipalDetails implements UserDetails, OAuth2User {
         this.attributes = attributes;
     }
 
-    //내가 공부하던 시큐리티에서는 쓰지 않았음 확인할 필요 있다.
+
     public MemberEntity getMemberEntity() {
         return memberEntity;
     }

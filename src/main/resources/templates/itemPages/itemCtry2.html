@@ -16,11 +16,11 @@
 <nav>
   <div class="container" style="position: relative">
     <div class="btn-group" style="top: 0px; left: 20px; position: relative">
-      <a th:href="@{/item/small(page=${page} ,sort='id' , size=${size},search=${search},category=${category})}"
+      <a th:href="@{/item/category2(page=${page} ,sort='id' , size=${size},search=${search},category=${category})}"
          th:style="${sort.equals('id')} ? 'color: black' " style="color: black">최신순</a>
-      <a th:href="@{/item/small(page=${page} ,sort='itemPrice' , size=${size},search=${search},category=${category})}"
+      <a th:href="@{/item/category2(page=${page} ,sort='itemPrice' , size=${size},search=${search},category=${category})}"
          th:style="${sort.equals('itemPrice')} ? 'color: black' " style="color: black">낮은가격순</a>
-      <a th:href="@{/item/small(page=${page} ,sort='itemSellCount' , size=${size},search=${search},category=${category})}"
+      <a th:href="@{/item/category2(page=${page} ,sort='itemSellCount' , size=${size},search=${search},category=${category})}"
          th:style="${sort.equals('itemSellCount')} ? 'color: black' " style="color: black">판매순</a>
     </div>
 
