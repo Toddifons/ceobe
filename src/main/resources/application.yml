@@ -1,6 +1,9 @@
 # server port 번호 설정
 server:
   port: 8080
+#이미지 생성될 루트 폴더#
+path:
+  savePath: "C:\\springboot_img_final\\"
 
 # 별도 yml 설정
 spring:

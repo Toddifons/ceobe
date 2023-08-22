@@ -24,6 +24,8 @@ public class ItemDTO {
     private int fileAttachedItem;
     private int itemSellCount;
 
+    private String imageFile;
+
     private List<MultipartFile> itemFile;
     private List<MultipartFile> itemFileUpdate;
     private List<String> originalFileNameItem;

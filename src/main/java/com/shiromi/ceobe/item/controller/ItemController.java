@@ -34,6 +34,11 @@ public class ItemController {
         itemService.save(itemDTO);
         return "redirect:/item/main";
     }
+//    @PostMapping("api/item/save")
+//    public String jsonSave(ItemDTO itemDTO) throws IOException {
+//        itemService.save(itemDTO);
+//        return "redirect:/item/main";
+//    }
     //상품 메인
     @GetMapping("/item/main")
     public String findAll(@PageableDefault(page = 1,size = 5) Pageable pageable, Model model ,
